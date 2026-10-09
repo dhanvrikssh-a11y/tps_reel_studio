@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TPS Jewels: Reel Price Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#F6EFE2;--card:#FBF7EE;--text:#2A2623;--muted:#5E564D;--line:#D9CBB0;--head:#123B34;--gold:#8A641F;--alt:#EEE4D1;--btn:#123B34;--btnt:#F6EFE2;--warn:#7A1E2C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C2622;--card:#133B34;--text:#EFE7D6;--muted:#B9B09D;--line:#2B5249;--head:#E8D5A8;--gold:#D9BE8A;--alt:#10312B;--btn:#D9BE8A;--btnt:#123B34;--warn:#F2A7B6}}
+:root[data-theme="dark"]{--bg:#0C2622;--card:#133B34;--text:#EFE7D6;--muted:#B9B09D;--line:#2B5249;--head:#E8D5A8;--gold:#D9BE8A;--alt:#10312B;--btn:#D9BE8A;--btnt:#123B34;--warn:#F2A7B6}
+*{box-sizing:border-box}html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:Poppins,'Segoe UI',Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+header{background:#123B34;color:#F6EFE2;padding:30px 20px 24px;text-align:center}
+header h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(28px,5vw,42px);margin:0;color:#D9BE8A;line-height:1.1}
+header p{margin:6px auto 0;max-width:640px;color:#D8CFBB;font-size:14.5px}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 18px 60px;display:grid;gap:16px;grid-template-columns:1fr}
+.col{display:grid;gap:16px;align-content:start;min-width:0}
+@media(min-width:900px){.wrap{grid-template-columns:minmax(0,1fr) 400px;align-items:start}.preview{position:sticky;top:12px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card[hidden],[hidden]{display:none!important}
+h2{font-size:17px;margin:0 0 10px;color:var(--head)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+label{display:block;font-size:12.5px;color:var(--muted);margin:0 0 3px}
+input[type=text],input[type=number],input:not([type]),select,textarea{width:100%;padding:11px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)}
+textarea{min-height:110px;resize:vertical;line-height:1.45}
+.big input{font-size:26px;font-weight:700;padding:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;margin:6px 0;color:var(--text)}.chk input{width:20px;height:20px}.chk label{margin:0;font-size:14px;color:var(--text)}
+button{font:inherit;font-weight:600;cursor:pointer}
+.btn{background:var(--btn);color:var(--btnt);border:0;border-radius:10px;padding:13px 16px;font-size:15px}
+.btn.alt{background:transparent;color:var(--head);border:1.5px solid var(--head)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.link{background:none;border:0;color:var(--gold);padding:6px 0;text-decoration:underline;font-size:13.5px}
+.fbtn{display:inline-block;background:var(--alt);border:1.5px solid var(--line);color:var(--head);border-radius:8px;padding:8px 12px;font-size:13.5px;font-weight:600;cursor:pointer;margin:0}
+#banner{background:var(--card);border:2px solid var(--warn);color:var(--warn);border-radius:10px;padding:12px 14px;font-weight:600;font-size:14.5px;margin-bottom:10px}
+#tpls{display:grid;gap:8px}.gh{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-top:8px}
+#tpls button{text-align:left;padding:11px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font-size:15px}
+#tpls button.on{border-color:var(--head);background:var(--head);color:#F6EFE2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tpls button.on{background:#D9BE8A;color:#123B34;border-color:#D9BE8A}}
+canvas{display:block;width:100%;height:auto;aspect-ratio:9/16;border-radius:12px;background:#000;border:1px solid var(--line)}
+.preview .btns{display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:10px}.preview .btns .full{grid-column:1/3}
+.status{min-height:22px;font-size:13.5px;margin-top:8px;color:var(--muted)}.status.bad{color:var(--warn);font-weight:600}
+.small{font-size:13px;color:var(--muted)}
+.item{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px;background:var(--bg)}
+.ih{display:flex;align-items:center;gap:10px;margin-bottom:8px}.ih .itot{margin-left:auto;font-weight:700;color:var(--head)}.itot.over{color:var(--warn)}
+.mrow{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.warnbox{border:2px solid var(--warn);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;margin:10px 0}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+#hooks{margin:6px 0 0;padding-left:20px;font-size:14px}
+
+.vh{position:absolute!important;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0);pointer-events:none}
+.fbtn{position:relative}
+button,.fbtn,label,select{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+input[type=text],input[type=number],input:not([type]),textarea{-webkit-appearance:none;appearance:none;border-radius:8px}
+select{-webkit-appearance:none;appearance:none;border-radius:8px;padding-right:34px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' fill='none' stroke='%23888' stroke-width='2'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
+.btn{min-height:44px}
+#shareBox{margin-top:8px}
+.pvToggle{display:none}
+@media(max-width:899px){
+ body>.preview{position:sticky;top:0;z-index:40;margin:0 auto;border-radius:0 0 14px 14px;max-width:560px;padding:8px 10px;padding-top:calc(8px + env(safe-area-inset-top,0px));box-shadow:0 8px 20px rgba(0,0,0,.25)}
+ .preview canvas{width:auto;max-width:100%;max-height:36vh;max-height:36dvh;margin:0 auto;aspect-ratio:auto}
+ .preview .btns{grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}.preview .btns .full{grid-column:auto}
+ .preview .btn{padding:8px 4px;font-size:13px}
+ .preview>.small{display:none}.pvToggle{display:inline-block}
+ body.pvHide .preview canvas{display:none}
+ .wrap{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+}
+</style></head>
+<body>
+<header><h1>TPS Jewels Reel Price Studio</h1><p>Type today’s 24K, 22K and 20K gold rates, pick a reel, add your jewellery photos or clips, and save an animated reel or image. Prices and totals are calculated for you.</p></header>
+<main class="wrap">
+<div class="col">
+<section class="card big">
+  <h2>1. Today’s gold rate (per 10 gram)</h2>
+  <div id="banner" hidden></div>
+  <div class="row"><div><label for="rate24">24K gold, ₹ per 10 g</label><input id="rate24" inputmode="numeric" type="number"></div><div><label for="rate22">22K gold, ₹ per 10 g</label><input id="rate22" inputmode="numeric" type="number"></div>
+  <div><label for="rate20">20K gold, ₹ per 10 g</label><input id="rate20" inputmode="numeric" type="number"></div></div>
+  <label for="silverRate" style="margin-top:8px">Silver rate, ₹ per 1 kg (used on the silver coin page)</label><input id="silverRate" inputmode="numeric" type="number">
+  <button class="link" id="auto24" type="button">Fill 24K from the 22K rate (22K x 24/22), then check it</button><br><button class="link" id="auto20" type="button">Fill 20K from the 22K rate (22K x 20/22), then check it</button>
+  <div><button class="btn" id="confirmRates" type="button" hidden>✔ Rates are for today</button></div>
+</section>
+<section class="card">
+  <h2>2. Choose a reel</h2>
+  <div id="introRow" style="border:2px solid var(--gold);border-radius:12px;padding:10px 12px;margin-bottom:12px;background:var(--alt)">
+    <div id="introSub"><div class="chk" style="margin:0"><input type="checkbox" id="introOn"><label for="introOn" style="font-weight:600">Add the big silver coin + making charge intro to the selected reel (about 5 seconds)</label></div>
+    <p class="small" style="margin:4px 0 0 28px">Ticked: the intro plays first, then this reel. Not ticked: the reel stays exactly as it is. Each reel remembers its own tick.</p>
+    <div style="margin-left:28px"><button class="link" id="introAllOn" type="button">Tick for all reels</button> &nbsp; <button class="link" id="introAllOff" type="button">Untick for all reels</button></div></div>
+    <div style="border-top:1px solid var(--line,#d9cbb0);margin-top:10px;padding-top:10px">
+      <div class="chk" style="margin:0"><input type="checkbox" id="silverOn"><label for="silverOn" style="font-weight:600">After this reel, flip the page to a big silver coin with today’s silver rate (about 5 seconds)</label></div>
+      <p class="small" style="margin:4px 0 0 28px">The coin has "SILVER COIN FREE WITH EVERY PURCHASE" around its edge and the silver rate in the centre. Type the silver rate in step 1.</p>
+      <div style="margin-left:28px"><button class="link" id="silverAllOn" type="button">Tick for all reels</button> &nbsp; <button class="link" id="silverAllOff" type="button">Untick for all reels</button></div>
+    </div>
+  </div>
+  <div id="introTitleRow" style="margin-bottom:12px"><label for="introTitle">Intro heading (shown above the silver coin and making charge; leave empty for no heading)</label><input id="introTitle" type="text" placeholder="Aaj ka Offer"></div>
+  <div id="tpls"></div>
+  <p class="small" style="margin-top:10px" id="lenInfo"></p>
+</section>
+
+<section class="card" data-needs="sv">
+  <h2>Silver reel settings</h2>
+  <div class="chk"><input type="checkbox" id="silverDM"><label for="silverDM">DM for price: show a "DM for price" overlay and do not show any price</label></div>
+  <p class="small" style="margin:2px 0 10px 28px">Untick it to show the price in &#8377; instead (type the price on the item, or in "Reel text" for single-design reels). Silver reels never show weight, gold rates or the gold making charge.</p>
+  <div class="row"><div><label for="dmText">Overlay words</label><input id="dmText" type="text" placeholder="DM for price"></div><div><label for="svTag">Header label (top centre)</label><input id="svTag" type="text" placeholder="SILVER JEWELLERY"></div></div>
+  <label for="disclaimerSilver" style="margin-top:10px">Silver reels disclaimer (bottom line)</label><input id="disclaimerSilver" type="text">
+</section>
+<section class="card" data-needs="svcoll">
+  <h2>Silver collection settings</h2>
+  <div id="svTopOnly"><label for="svTitle">Reel title</label><input id="svTitle" type="text" placeholder="Top 6 Silver Payal">
+  <div class="chk"><input type="checkbox" id="svShowBudget"><label for="svShowBudget">Show an "under &#8377;budget" line (every item must have a price below the budget)</label></div>
+  <label for="svBudget">Budget line (&#8377;)</label><input id="svBudget" type="number" inputmode="numeric"></div>
+  <div class="row" style="margin-top:10px"><div id="svPerRow"><label for="svPer">Seconds per item</label><input id="svPer" type="number" step="0.1"></div><div id="svPer2Row"><label for="svPer2">Seconds per reveal</label><input id="svPer2" type="number" step="0.1"></div></div>
+</section>
+<section class="card" data-needs="sitems">
+  <h2>Silver items (up to 12)</h2>
+  <div class="tools"><label class="fbtn">Add many photos/clips at once<input type="file" id="sbulk" accept="image/*,video/*" multiple class="vh"></label>
+  <button class="fbtn" id="addSItem" type="button">+ Add one item</button><button class="fbtn" id="sortSAsc" type="button">Sort by price low to high</button><button class="fbtn" id="sortSDesc" type="button">Sort by price high to low</button></div>
+  <div id="sitems"></div>
+  <p class="small">No weight is asked or shown. Prices are optional: with "DM for price" ticked they stay hidden.</p>
+</section>
+<section class="card" data-needs="coll">
+  <h2>3. Collection settings</h2>
+  <div class="row"><div><label for="collTitle">Reel title</label><input id="collTitle" type="text" placeholder="Top 9 Chains"></div>
+  <div><label for="budget">Budget line (₹)</label><input id="budget" type="number" inputmode="numeric"></div>
+  <div id="perRow"><label for="per">Seconds per item</label><input id="per" type="number" step="0.1"></div>
+  <div id="per2Row"><label for="per2">Seconds per guess</label><input id="per2" type="number" step="0.1"></div></div>
+  <div class="chk"><input type="checkbox" id="showBudget"><label for="showBudget">Show "under ₹budget" line (every item must cost less than the budget)</label></div>
+  <div class="chk"><input type="checkbox" id="countdown"><label for="countdown">Countdown order (last item first, item 1 is the big finish)</label></div>
+  <p class="small" id="budgetNote">Item 1 should be your best pick. The reel is built to be short: about 2 seconds per item keeps most viewers watching.</p>
+</section>
+<section class="card" data-needs="items">
+  <h2>4. Items (up to 12)</h2>
+  <div class="tools"><label class="fbtn">Add many photos/clips at once<input type="file" id="bulk" accept="image/*,video/*" multiple class="vh"></label>
+  <button class="fbtn" id="addItem" type="button">+ Add one item</button><button class="fbtn" id="sortAsc" type="button">Sort low to high</button><button class="fbtn" id="sortDesc" type="button">Sort high to low</button></div>
+  <div id="budgetWarn" class="warnbox" hidden></div>
+  <div id="items"></div>
+  <p class="small">Each item’s total uses today’s rate, its own weight and purity, your making charge and GST below. Items without a photo show a placeholder.</p>
+</section>
+<section class="card" data-needs="history">
+  <h2>3. Rate history (for the "last 7 days" reel)</h2>
+  <p class="small">Each day you tap "Rates are for today" the rate is saved here. You can also type past days, one per line: date, 22K rate (for example 2026-10-02,118000).</p>
+  <textarea id="histText" placeholder="2026-10-02,118000"></textarea>
+</section>
+<section class="card" data-needs="tips">
+  <h2>3. Tips list</h2>
+  <label for="tipsTitle">Title</label><input id="tipsTitle" type="text">
+  <label for="tipsText" style="margin-top:10px">Tips, one per line (up to 6). Only write things that are true for your shop.</label><textarea id="tipsText"></textarea>
+</section>
+<section class="card" data-needs="testi">
+  <h2>3. Customer words</h2>
+  <label for="quote">What the customer said (get their permission before using it)</label><textarea id="quote" style="min-height:80px"></textarea>
+  <label for="quoteName" style="margin-top:10px">Name and town</label><input id="quoteName" type="text">
+</section>
+<section class="card" id="cleanSec" hidden>
+  <h2>Show or hide the text on this reel</h2>
+  <div class="chk"><input type="checkbox" id="textOn"><label for="textOn">Show text boxes and badges (untick to show only the full clip or photo)</label></div>
+  <div class="chk"><input type="checkbox" id="closeOn"><label for="closeOn">Show the closing screen with contact details at the end</label></div>
+  <div id="cleanLenRow" hidden><label for="cleanLen">Seconds to show the clip (3 to 60)</label><input id="cleanLen" type="number" inputmode="numeric" step="1"></div>
+  <p class="small">With the text unticked, the reel shows only your clip or photo, full screen. The coin intro and the silver rate page have their own switches in the "Intro" area.</p>
+</section>
+<section class="card" id="extraSec" hidden>
+  <h2>Reel text (edit the words in this reel)</h2>
+  <div id="extraFields"></div>
+  <p class="small">Write only things that are true for your shop. Customer names and photos only with their permission.</p>
+</section>
+<section class="card" id="mediaSec">
+  <h2>3. Jewellery photo or clip (optional)</h2>
+  <input type="file" id="file" accept="image/*,video/*"><p class="small" id="mediaInfo">No clip loaded: the window shows black space.</p>
+  <button class="link" id="clear" type="button">Remove photo/clip</button>
+  <div class="chk"><input type="checkbox" id="showLabel"><label for="showLabel">Show a "jewellery here" label in the empty window</label></div>
+  <p class="small">Prefer to add the clip in CapCut or Instagram? Save the reel with the black window, then place your clip on top.</p>
+</section>
+<section class="card" id="priceSec">
+  <h2>Price details</h2>
+  <div class="row">
+   <div><label for="design">Design name</label><input id="design" type="text"></div>
+   <div><label for="karat">Gold purity</label><select id="karat"><option value="24K">24K</option><option value="22K">22K</option><option value="20K">20K</option></select></div>
+   <div><label for="weight">Weight (grams)</label><input id="weight" inputmode="decimal" type="number" step="0.01"></div>
+   <div><label for="other">Stone / other (₹)</label><input id="other" inputmode="numeric" type="number"></div>
+  </div>
+  <label for="chartWeights" style="margin-top:10px">Weights for the price chart (grams, comma separated, up to 6)</label><input id="chartWeights" type="text">
+  <p class="small">Single-design reels (3, 4, 6, 17 and the full-video reels) use the fields above. Collection reels use each item’s own weight.</p>
+</section>
+<section class="card">
+  <h2>Making charge and tax (all reels)</h2>
+  <div class="row"><div><label for="making">Making charge (%)</label><input id="making" inputmode="decimal" type="number" step="0.01"></div><div><label for="gst">GST (%)</label><input id="gst" inputmode="decimal" type="number" step="0.01"></div></div>
+  <div class="chk"><input type="checkbox" id="showGst"><label for="showGst">Include GST in totals</label></div>
+  <p class="small">The GST rate and how it applies to making charges must match your actual billing: ask your CA. Reels show an estimate; the final price is as per your bill. If you charge wastage or any other fee, show it, so the flat making-charge claim stays true.</p>
+</section>
+<section class="card">
+  <h2>Shop details</h2>
+  <div class="row"><div><label for="phone">Phone number</label><input id="phone" type="text" placeholder="+91 ..."></div><div><label for="owner">Owner name (shown below the phone number)</label><input id="owner" type="text" placeholder="e.g. Rajesh Sharma"></div><div><label for="ownerLabel">Word before the name</label><input id="ownerLabel" type="text" placeholder="Owner / Prop."></div><div><label for="location">Shop location</label><input id="location" type="text" placeholder="Market, town"></div><div><label for="town">Town (for hashtag)</label><input id="town" type="text" placeholder="e.g. Jhabua"></div></div>
+  <div class="row" style="margin-top:10px"><div><label for="time">Rate time (optional)</label><input id="time" type="text" placeholder="11:00 am"></div></div>
+  <div class="chk"><input type="checkbox" id="showTime"><label for="showTime">Show the rate time next to the date</label></div>
+  <label for="trustText">Trust line (small badge on some reels)</label><input id="trustText" type="text">
+  <label for="disclaimer" style="margin-top:8px">Disclaimer line</label><input id="disclaimer" type="text">
+</section>
+<section class="card">
+  <h2>Cash only / No udhar badge (shown on every reel)</h2>
+  <div class="chk"><input type="checkbox" id="showPolicy"><label for="showPolicy">Show the payment-policy badge (top-left) and the line on the closing screen</label></div>
+  <div class="row"><div><label for="policyPreset">Quick choice</label><select id="policyPreset"><option value="">Choose...</option><option value="CASH ONLY|NO UDHAR">Cash only | No udhar</option><option value="CASH / UPI|NO UDHAR">Cash / UPI | No udhar</option><option value="NAGAD SIRF|UDHAR BAND">Nagad sirf | Udhar band</option><option value="NO UDHAR|HAR BAAR">No udhar | Har baar</option></select></div>
+  <div><label for="policy1">Line 1</label><input id="policy1" type="text"></div><div><label for="policy2">Line 2</label><input id="policy2" type="text"></div></div>
+  <div class="chk"><input type="checkbox" id="policyNote"><label for="policyNote">Add a large-bill line to the caption (bank transfer/UPI/cheque above ₹2 lakh)</label></div>
+  <div class="warnbox" style="font-weight:500">Important: Section 269ST bars a jeweller from receiving ₹2 lakh or more in cash from one person in a day, for one transaction, or for one occasion, and the penalty equals the amount received. PAN is also required for jewellery purchases of ₹2 lakh and above, in any payment mode. So "cash only" cannot apply to big bills: accept bank transfer, UPI or cheque for them, and say so in your terms. Ask your CA to confirm for your shop.</div>
+</section>
+<section class="card">
+  <h2>Silver coin offer (shown on every reel)</h2>
+  <div class="chk"><input type="checkbox" id="showCoin"><label for="showCoin">Show the "FREE silver coin with every purchase" seal on reels and the closing screen</label></div>
+  <div class="row"><div><label for="coinLabel">Text on the coin seal</label><input id="coinLabel" type="text"></div><div><label for="coinDetail">Coin details for the caption (optional, only if true)</label><input id="coinDetail" type="text" placeholder="e.g. 1 g silver coin"></div></div>
+  <p class="small">Keep the offer honest: say exactly which purchases qualify (for example a minimum bill) in your disclaimer, and describe the coin accurately (weight, purity) only if you can show it. Ask your CA how a free gift is treated for GST and billing.</p>
+</section>
+<section class="card">
+  <h2>Caption and hooks for Instagram</h2>
+  <p class="small">A ready caption for the selected reel. Edit it, then paste it into Instagram. It uses 5 hashtags and keywords people search for.</p>
+  <textarea id="caption" style="min-height:230px"></textarea>
+  <div class="tools"><button class="btn" id="copyCap" type="button">Copy caption</button></div>
+  <label>Text to show in the first 3 seconds (pick one)</label><ul id="hooks"></ul>
+</section>
+</div>
+<aside class="preview card" id="pvAside">
+  <canvas id="cv" width="1080" height="1920"></canvas>
+  <div class="btns"><button class="btn alt full" id="play" type="button">Pause preview</button>
+  <button class="btn" id="save" type="button">Save image (PNG)</button><button class="btn" id="rec" type="button">Record reel video</button></div>
+  <button class="link pvToggle" id="pvToggle" type="button">Hide preview</button>
+  <button class="link" id="txtToggle" type="button" hidden>Text boxes: ON</button>
+  <div class="status" id="status"></div>
+  <div id="shareBox" hidden></div>
+  <p class="small">Video recording runs in real time (Chrome, or Safari on iPhone with iOS 14.5 or newer). If recording is not available, play the preview and use your phone’s screen recorder.</p>
+</aside>
+</main>
+<script>
+(function(root){
+'use strict';
+var C={pine:'#123B34',iv:'#F6EFE2',gold:'#B58A3C',ch:'#D9BE8A',rose:'#C98E86',garn:'#7A1E2C',gt:'#8A641F',pl:'#1B4A41',ink:'#2A2623'};
+var W=1080,H=1920, ENV={makeCanvas:null}, PATTERN=null;
+var FP='Poppins, "Segoe UI", Arial, sans-serif', FC='"Cormorant Garamond", Georgia, serif';
+function cl(x){return Math.max(0,Math.min(1,x))}
+function ease(x){x=cl(x);return 1-Math.pow(1-x,3)}
+function ap(t,a,d){return ease((t-a)/d)}
+function inr(n){n=Math.round(n);var neg=n<0;n=Math.abs(n);var s=String(n),l=s.slice(-3),r=s.slice(0,-3);if(r)l=','+l;return (neg?'-':'')+'\u20B9'+r.replace(/\B(?=(\d{2})+(?!\d))/g,',')+l}
+function calc(s){
+  var rate=(s.karat==='24K')?s.rate24:((s.karat==='20K')?s.rate20:s.rate22), gv=rate/10*s.weight, mk=gv*s.making/100, oth=s.other||0, sub=gv+mk+oth,
+      gst=s.showGst?sub*s.gst/100:0;
+  return {rate:rate,gv:gv,mk:mk,oth:oth,sub:sub,gst:gst,total:sub+gst};
+}
+function init(env){ENV=env; buildPattern();}
+function buildPattern(){
+  var c=ENV.makeCanvas(64,64),g=c.getContext('2d');
+  g.strokeStyle=C.ch;g.fillStyle=C.ch;g.lineWidth=1.2;
+  g.beginPath();g.arc(32,32,12,0,Math.PI*2);g.stroke();
+  for(var k=0;k<8;k++){var a=k*Math.PI/4;g.beginPath();g.moveTo(32+15.5*Math.cos(a),32+15.5*Math.sin(a));g.lineTo(32+20*Math.cos(a),32+20*Math.sin(a));g.stroke();}
+  dia(g,32,32,3.6);
+  [[0,0],[64,0],[0,64],[64,64]].forEach(function(p){dia(g,p[0],p[1],4)});
+  PATTERN=c;
+}
+function dia(g,cx,cy,r){g.beginPath();g.moveTo(cx,cy-r);g.lineTo(cx+r*.75,cy);g.lineTo(cx,cy+r);g.lineTo(cx-r*.75,cy);g.closePath();g.fill();}
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.lineTo(x+w-r,y);g.arcTo(x+w,y,x+w,y+r,r);g.lineTo(x+w,y+h-r);g.arcTo(x+w,y+h,x+w-r,y+h,r);g.lineTo(x+r,y+h);g.arcTo(x,y+h,x,y+h-r,r);g.lineTo(x,y+r);g.arcTo(x,y,x+r,y,r);g.closePath();}
+// text with optional tracking; opts: font,size,weight,style,color,align,track,alpha
+function T(g,str,x,y,o){
+  o=o||{};var fam=o.fam==='c'?FC:FP;g.save();g.globalAlpha=(o.alpha==null?1:o.alpha)*g.globalAlpha;
+  g.font=(o.style?o.style+' ':'')+(o.weight||500)+' '+(o.size||40)+'px '+fam;g.fillStyle=o.color||C.iv;g.textBaseline='alphabetic';
+  var tr=(o.track||0)*(o.size||40),al=o.align||'center';
+  if(!tr){g.textAlign=al;g.fillText(str,x,y);g.restore();return g.measureText?0:0}
+  var ws=[],tot=0;for(var i=0;i<str.length;i++){var w=g.measureText(str[i]).width;ws.push(w);tot+=w;}tot+=tr*(str.length-1);
+  var sx=al==='center'?x-tot/2:(al==='right'?x-tot:x);g.textAlign='left';
+  for(i=0;i<str.length;i++){g.fillText(str[i],sx,y);sx+=ws[i]+tr;}
+  g.restore();
+}
+function tw(g,str,o){g.save();g.font=((o.style?o.style+' ':'')+(o.weight||500)+' '+(o.size||40)+'px '+(o.fam==='c'?FC:FP));var w=g.measureText(str).width+((o.track||0)*(o.size||40))*(str.length-1);g.restore();return w}
+function halo(g,cx,cy,d,col,lw){
+  var s=d/200;g.save();g.translate(cx-d/2,cy-d/2);g.scale(s,s);g.strokeStyle=col;g.fillStyle=col;g.lineWidth=lw||4.5;g.lineCap='round';
+  g.beginPath();g.arc(100,100,92,0,Math.PI*2);g.stroke();
+  g.beginPath();g.moveTo(50,86);g.quadraticCurveTo(100,56,150,86);g.stroke();
+  g.beginPath();g.moveTo(100,71);g.lineTo(100,152);g.stroke();
+  g.beginPath();g.moveTo(100,36);g.lineTo(109,48);g.lineTo(100,60);g.lineTo(91,48);g.closePath();g.fill();
+  g.restore();
+}
+function logoH(g,cx,top,w,col,alpha){
+  var s=w/400;g.save();g.globalAlpha=(alpha==null?1:alpha)*g.globalAlpha;g.translate(cx-w/2,top);g.scale(s,s);
+  halo(g,50,55,100,col,4.5);
+  T(g,'TPS',120,62,{fam:'c',weight:700,size:58,color:col,align:'left',track:.138});
+  T(g,'JEWELS',123,92,{fam:'c',weight:700,size:19,color:col,align:'left',track:.58});
+  g.restore();
+}
+function bg(g,dark,t){
+  g.fillStyle=dark?C.pine:C.iv;g.fillRect(0,0,W,H);
+  g.save();g.globalAlpha=(dark?.07:.12)*ap(t,0,.6);
+  var p=g.createPattern(PATTERN,'repeat');g.fillStyle=p;g.fillRect(0,0,W,H);g.restore();
+  g.save();g.strokeStyle=dark?C.ch:C.gold;g.globalAlpha=.4;g.lineWidth=2;g.strokeRect(36,36,W-72,H-72);g.restore();
+}
+function check(g,cx,cy,r,col,bgc){
+  g.save();if(bgc){g.fillStyle=bgc;g.beginPath();g.arc(cx,cy,r,0,Math.PI*2);g.fill();}
+  g.strokeStyle=col;g.lineWidth=Math.max(2,r*.2);g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(cx-r*.45,cy+r*.02);g.lineTo(cx-r*.1,cy+r*.38);g.lineTo(cx+r*.5,cy-r*.34);g.stroke();g.restore();
+}
+function phoneIcon(g,cx,cy,r,col){g.save();g.strokeStyle=col;g.fillStyle=col;g.lineWidth=r*.17;rr(g,cx-r*.5,cy-r*.85,r,r*1.7,r*.2);g.stroke();g.beginPath();g.arc(cx,cy+r*.55,r*.09,0,7);g.fill();g.beginPath();g.moveTo(cx-r*.15,cy-r*.6);g.lineTo(cx+r*.15,cy-r*.6);g.stroke();g.restore();}
+function pinIcon(g,cx,cy,r,col){g.save();g.fillStyle=col;g.beginPath();g.arc(cx,cy-r*.2,r*.62,Math.PI*.82,Math.PI*2.18);g.lineTo(cx,cy+r*.95);g.closePath();g.fill();g.globalCompositeOperation='destination-out';g.beginPath();g.arc(cx,cy-r*.2,r*.22,0,7);g.fill();g.restore();}
+function trustPill(g,cx,y,col,acc,bgc,alpha){
+  var txt=TRUST,o={weight:600,size:30},w=tw(g,txt,o)+110;
+  g.save();g.globalAlpha=(alpha==null?1:alpha)*g.globalAlpha;g.strokeStyle=acc;g.lineWidth=2;rr(g,cx-w/2,y,w,66,33);g.stroke();
+  check(g,cx-w/2+42,y+33,18,bgc,acc);T(g,txt,cx-w/2+74,y+44,{weight:600,size:30,color:col,align:'left'});g.restore();
+}
+function ownerText(s){return (s.ownerLabel||'Owner')+': '+(s.owner||'[OWNER NAME]')}
+function footer(g,s,t,y,dark,t0){
+  var col=dark?C.iv:C.pine,acc=dark?C.ch:C.gold,a=ap(t,t0,.5),yy=y-30;
+  g.save();g.globalAlpha=a;
+  var ph=s.phone||'[PHONE NUMBER]',lc=s.location||'[SHOP LOCATION]',o={weight:600,size:38},w1=tw(g,ph,o)+56,w2=tw(g,lc,{weight:600,size:fitText(g,lc,{weight:600,size:32},800)})+56,ot=ownerText(s),o3={weight:600,size:32},w3=tw(g,ot,o3);
+  var x1=540-w1/2;phoneIcon(g,x1+18,yy-12,17,acc);T(g,ph,x1+56,yy,{weight:600,size:38,color:col,align:'left'});
+  T(g,ot,540,yy+44,{weight:600,size:fitText(g,ot,o3,820),color:acc});
+  var x2=540-w2/2;pinIcon(g,x2+18,yy+84,17,acc);T(g,lc,x2+56,yy+96,{weight:600,size:fitText(g,lc,{weight:600,size:32},800),color:col,align:'left'});
+  T(g,(s._silver&&s.disclaimerSilver&&String(s.disclaimerSilver).trim())?s.disclaimerSilver:s.disclaimer,540,yy+142,{weight:400,size:23,color:dark?C.ch:'#5E564D',alpha:.9});
+  g.restore();
+}
+function mediaWin(g,s,x,y,w,h,t,t0,dark){
+  var a=ap(t,t0,.6);g.save();g.globalAlpha=a;
+  g.save();rr(g,x,y,w,h,26);g.clip();g.fillStyle='#000';g.fillRect(x,y,w,h);
+  var m=s.media;if(m&&m.w&&m.h){var sc=Math.max(w/m.w,h/m.h),dw=m.w*sc,dh=m.h*sc;try{g.drawImage(m.el,x+(w-dw)/2,y+(h-dh)/2,dw,dh);}catch(e){}}
+  else if(s.showLabel){T(g,'JEWELLERY PHOTO / CLIP',x+w/2,y+h/2+10,{weight:500,size:30,color:C.ch,track:.2,alpha:.5});}
+  g.restore();
+  g.strokeStyle=dark?C.ch:C.gold;g.lineWidth=3;rr(g,x-12,y-12,w+24,h+24,34);g.stroke();
+  g.lineWidth=1.3;g.globalAlpha=a*.7;rr(g,x-4,y-4,w+8,h+8,30);g.stroke();
+  [[x-12,y-12],[x+w+12,y-12],[x-12,y+h+12],[x+w+12,y+h+12]].forEach(function(p){g.fillStyle=dark?C.ch:C.gold;dia(g,p[0],p[1],11)});
+  g.restore();
+}
+function count(v,t,a,d){return v*ease((t-a)/d)}
+function badge(g,s){return s.showTime&&s.time?s.dateStr+'  |  '+s.time:s.dateStr}
+function head(g,s,t,dark){if(s._hdr)return;logoH(g,540,230,440,dark?C.ch:C.pine,ap(t,.1,.5));}
+function makingLine(g,s,t,y,dark,t0){
+  var a=ap(t,t0,.5);T(g,'Making charge: flat '+(+s.making.toFixed(2))+'%*',540,y+18*(1-a),{fam:'c',style:'italic',weight:600,size:56,color:dark?C.iv:C.pine,alpha:a});
+}
+
+var HDR={coin:{x:936,y:152,r:70},mk:{x:540,y:258}};
+var TRUST='Hallmark Card Available';
+function eio(x){x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
+function eob(x){x=cl(x);var c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)}
+function mixc(a,b,u){var pa=parseInt(a.slice(1),16),pb=parseInt(b.slice(1),16);return 'rgb('+Math.round(lerp(pa>>16,pb>>16,u))+','+Math.round(lerp((pa>>8)&255,(pb>>8)&255,u))+','+Math.round(lerp(pa&255,pb&255,u))+')'}
+var PAL_S={hi:'#F7F9FA',mid:'#CBD1D6',lo:'#98A0A7',edge:'#EEF1F3',dash:'#7E868D',line:'#6B737A',rimA:'#7E868D',rimB:'#C9CFD4'};
+var PAL_G={hi:'#FBEBC3',mid:'#DDBF86',lo:'#A67A2E',edge:'#FFF4D2',dash:'#8A641F',line:'#9A7127',rimA:'#8A641F',rimB:'#E3C98F'};
+function discBase(g,r,P){
+  var k=r/100,gr=g.createRadialGradient(-r*.3,-r*.4,r*.1,0,0,r*1.05);gr.addColorStop(0,P.hi);gr.addColorStop(.5,P.mid);gr.addColorStop(1,P.lo);
+  g.fillStyle=gr;g.beginPath();g.arc(0,0,r,0,7);g.fill();
+  g.strokeStyle=P.edge;g.lineWidth=3*k;g.beginPath();g.arc(0,0,r-2*k,0,7);g.stroke();
+  g.strokeStyle=P.dash;g.lineWidth=2*k;g.setLineDash([2*k,3.6*k]);g.beginPath();g.arc(0,0,r-8*k,0,7);g.stroke();g.setLineDash([]);
+  g.strokeStyle=P.line;g.lineWidth=1.5*k;g.beginPath();g.arc(0,0,r-18*k,0,7);g.stroke();
+}
+function silverFront(g,r,s){var k=r/100,lab=String((s&&s.coinLabel)||'SILVER COIN').toUpperCase();discBase(g,r,PAL_S);
+  arcText(g,lab,0,0,r-32*k,0,Math.min(13*k,150*k/(lab.length*.85)),'#3A4147',.16);
+  halo(g,0,-24*k,34*k,'#4A5158',4.5);T(g,'FREE*',0,44*k,{weight:700,size:40*k,color:'#232A2F',track:.03});}
+function discBack(g,r,P,ink){var k=r/100;discBase(g,r,P);halo(g,0,-26*k,56*k,ink,5);
+  T(g,'TPS',0,36*k,{fam:'c',weight:700,size:30*k,color:ink,track:.14});T(g,'JEWELS',0,58*k,{fam:'c',weight:700,size:10*k,color:ink,track:.45});}
+function silverBack(g,r){discBack(g,r,PAL_S,'#2B3136')}
+function goldBack(g,r){discBack(g,r,PAL_G,'#3B2A0B')}
+function goldFront(g,r,s){var k=r/100,n=(+s.making.toFixed(2))+'%';discBase(g,r,PAL_G);
+  T(g,'FLAT MAKING',0,-34*k,{weight:700,size:13*k,color:'#5C4213',track:.12});
+  T(g,n,0,16*k,{weight:700,size:fitText(g,n,{weight:700,size:50*k},118*k),color:'#3B2A0B'});
+  T(g,'CHARGES*',0,48*k,{weight:700,size:15*k,color:'#5C4213',track:.1});}
+// pseudo-3D disc spinning around its vertical axis
+function spinDisc(g,cx,cy,R,th,P,front,back,o){
+  o=o||{};if(R<2)return;
+  var c=Math.cos(th),sn=Math.sin(th),ac=Math.abs(c),Tk=R*.085,n=14,i;
+  g.save();g.globalAlpha=(o.alpha==null?1:o.alpha)*g.globalAlpha;
+  if(o.shadow>0){var sr=R*(.6+.4*ac);g.save();g.translate(cx,cy+R*1.22);g.scale(1,.16);var rg=g.createRadialGradient(0,0,0,0,0,sr);rg.addColorStop(0,'rgba(0,0,0,'+(.45*o.shadow)+')');rg.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=rg;g.beginPath();g.arc(0,0,sr,0,7);g.fill();g.restore();}
+  if(ac<.995){var rx=Math.max(1.5,R*ac);for(i=0;i<=n;i++){var u=i/n;g.fillStyle=mixc(P.rimA,P.rimB,u);g.beginPath();g.ellipse(cx+(u*2-1)*Tk*sn,cy,rx,R,0,0,7);g.fill();}}
+  if(ac>.015){var fo=(c>=0?Tk*sn:-Tk*sn);g.save();g.translate(cx+fo,cy);g.scale(ac,1);(c>=0?front:back)(g,R);
+    g.save();g.beginPath();g.arc(0,0,R,0,7);g.clip();
+    var p=((th/(2*Math.PI))%1+1)%1,x0=-R*1.8+3.6*R*p,gl=g.createLinearGradient(x0-R*.5,-R*.6,x0+R*.5,R*.6);
+    gl.addColorStop(0,'rgba(255,255,255,0)');gl.addColorStop(.5,'rgba(255,255,255,.38)');gl.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gl;g.fillRect(-R,-R,2*R,2*R);
+    if(ac<1){g.fillStyle='rgba(0,0,0,'+(.38*(1-ac))+')';g.fillRect(-R,-R,2*R,2*R);}
+    g.restore();g.restore();}
+  g.restore();
+}
+function emergeFx(g,cx,cy,R,u){
+  if(u<=0||u>=1)return;var a=1-u,rad=R*(.8+1.6*u);g.save();
+  var gl=g.createRadialGradient(cx,cy,0,cx,cy,rad);gl.addColorStop(0,'rgba(255,244,205,'+(.7*a)+')');gl.addColorStop(1,'rgba(255,244,205,0)');g.fillStyle=gl;g.beginPath();g.arc(cx,cy,rad,0,7);g.fill();
+  g.strokeStyle='rgba(217,190,138,'+a+')';g.lineWidth=5*a+1;g.beginPath();g.arc(cx,cy,R*(.4+1.5*u),0,7);g.stroke();
+  for(var i=0;i<10;i++){var an=i*.628+.3,rd=R*(.6+1.7*ease(u));star(g,cx+rd*Math.cos(an),cy+rd*Math.sin(an),6+12*a,'rgba(255,243,196,'+a+')');}
+  g.restore();
+}
+function coinHdr(g,s,cx,cy,r,a){spinDisc(g,cx,cy,r,0,PAL_S,function(g,q){silverFront(g,q,s)},silverBack,{alpha:a});}
+function makingPill(g,s,cx,cy,a,light,sc){
+  if(a<=0)return;var n=(+s.making.toFixed(2))+'%',nsz=fitText(g,n,{weight:700,size:60},170),nw=tw(g,n,{weight:700,size:nsz}),w=nw+190+70,h=84,
+      ink=light?C.pine:C.ch,sub=light?C.gt:C.iv,line=light?C.gold:C.ch,z=sc==null?1:sc;
+  g.save();g.globalAlpha=a*g.globalAlpha;g.translate(cx,cy);g.scale(z,z);g.translate(-cx,-cy);
+  g.fillStyle=light?'rgba(18,59,52,.07)':'rgba(217,190,138,.12)';rr(g,cx-w/2,cy-h/2,w,h,h/2);g.fill();
+  g.strokeStyle=line;g.lineWidth=2.5;rr(g,cx-w/2,cy-h/2,w,h,h/2);g.stroke();
+  T(g,n,cx-w/2+36,cy+nsz*.34,{weight:700,size:nsz,color:ink,align:'left'});
+  var lx=cx-w/2+36+nw+22;T(g,'FLAT MAKING',lx,cy-4,{weight:700,size:23,color:sub,align:'left',track:.1});T(g,'CHARGES*',lx,cy+26,{weight:700,size:23,color:sub,align:'left',track:.1});
+  g.restore();
+}
+// one wide rate row (used for the 3 stacked cards)
+function rateRow(g,x,y,w,h,label,val,t,t0,dark){
+  var a=ap(t,t0,.55);if(a<=0)return;g.save();g.globalAlpha=a;g.translate((1-a)*80,0);
+  var ink=dark?C.pine:C.iv,lab=dark?C.gt:C.ch,mut=dark?'#5E564D':C.ch;
+  g.fillStyle=dark?C.iv:C.pine;rr(g,x,y,w,h,26);g.fill();
+  g.save();g.globalAlpha=a*.7;g.strokeStyle=dark?C.gold:C.ch;g.lineWidth=2;rr(g,x+10,y+10,w-20,h-20,18);g.stroke();
+  g.strokeStyle=dark?'#D9CBB0':C.ch;g.beginPath();g.moveTo(x+270,y+42);g.lineTo(x+270,y+h-42);g.stroke();g.restore();
+  T(g,label,x+60,y+h*.52,{weight:700,size:84,color:lab,align:'left'});
+  T(g,'GOLD',x+64,y+h*.52+44,{weight:600,size:24,color:mut,align:'left',track:.3});
+  var sz=fitText(g,inr(val),{weight:700,size:92},w-270-50-24);
+  T(g,inr(count(val,t,t0+.2,.9)),x+w-50,y+h*.55,{weight:700,size:sz,color:ink,align:'right'});
+  T(g,'per 10 gram  |  '+inr(count(val/10,t,t0+.2,.9))+' / g',x+w-50,y+h*.55+48,{weight:500,size:26,color:mut,align:'right'});
+  g.restore();
+}
+// compact tile (3 across, under a media window)
+function rateTile(g,x,y,w,h,label,val,t,t0,dark){
+  var a=ap(t,t0,.55);if(a<=0)return;g.save();g.globalAlpha=a;g.translate(0,(1-a)*50);
+  var ink=dark?C.pine:C.iv,lab=dark?C.gt:C.ch,mut=dark?'#5E564D':C.ch;
+  g.fillStyle=dark?C.iv:C.pine;rr(g,x,y,w,h,24);g.fill();g.save();g.globalAlpha=a*.7;g.strokeStyle=dark?C.gold:C.ch;g.lineWidth=2;rr(g,x+8,y+8,w-16,h-16,17);g.stroke();g.restore();
+  T(g,label+' GOLD',x+w/2,y+62,{weight:700,size:32,color:lab,track:.06});
+  T(g,inr(count(val,t,t0+.2,.9)),x+w/2,y+h*.66,{weight:700,size:fitText(g,inr(val),{weight:700,size:56},w-36),color:ink});
+  T(g,'per 10 gram',x+w/2,y+h*.66+40,{weight:500,size:24,color:mut});
+  g.restore();
+}
+// title + date + 24K/22K/20K cards + trust pill
+function drawRates3(g,s,t,t0,dark){
+  var ta=ap(t,t0,.6);
+  T(g,'Aaj ka Gold Rate',540,452+(1-ta)*24,{fam:'c',weight:700,size:96,color:dark?C.ch:C.pine,alpha:ta});
+  T(g,badge(g,s),540,516,{weight:500,size:34,color:dark?C.iv:'#5E564D',alpha:ap(t,t0+.2,.5)});
+  [['24K',s.rate24],['22K',s.rate22],['20K',s.rate20]].forEach(function(c,i){rateRow(g,90,564+i*262,900,240,c[0],c[1],t,t0+.4+i*.5,dark)});
+  trustPill(g,540,1372,C.iv,C.ch,C.pine,ap(t,t0+2.2,.5));
+}
+// NEW reel: silver coin + making-charge medallion intro, then 3 rates
+function introLayer(g,s,t,o){o=o||{};
+  var R0=175,CY=950,TT=o.TT||4.9,TD=o.TD||1.1;
+  bg(g,true,t);
+  var sa=1-ap(t,TT-.2,.6);if(sa>.01)sparkles(g,t,16,13,330,1500,C.ch,sa);
+  if(o.wide)logoH(g,540,120,360,C.ch,ap(t,.1,.5));else logoH(g,540,100,300,C.ch,ap(t,.1,.5));
+  var ttl=(s.introTitle==null)?'Aaj ka Offer':String(s.introTitle).trim();
+  if(ttl)T(g,ttl,540,452,{fam:'c',weight:700,size:fitText(g,ttl,{weight:700,size:96},840),color:C.ch,alpha:ap(t,.2,.6)*(1-ap(t,TT-.2,.5))});
+  var tr=eio((t-TT)/TD);
+  if(s.showPolicy!==false)badgePolicy(g,s,false,50,o.wide?96:106,240,90,ap(t,TT+.6,.5));
+  if(s.showCoin!==false&&t>.3){
+    var cx,cy,R,th,sh;
+    if(t<TT){R=R0*eob((t-.35)/.7);cx=lerp(540,800,eio((t-.95)/1.4));cy=CY;th=Math.PI*4*eio((t-.35)/3.55);sh=1;}
+    else{cx=lerp(800,HDR.coin.x,tr);cy=lerp(CY,o.wide?142:HDR.coin.y,tr);R=lerp(R0,HDR.coin.r,tr);th=Math.PI*4;sh=1-tr;}
+    emergeFx(g,540,CY,R0,(t-.35)/.9);
+    spinDisc(g,cx,cy,R,th,PAL_S,function(g,q){silverFront(g,q,s)},silverBack,{shadow:sh});
+  }
+  if(t>2.0){
+    var mx,my,mR,mth,ma=1,msh;
+    if(t<TT){mR=R0*eob((t-2.1)/.65);mx=lerp(540,300,eio((t-2.6)/1.35));my=CY;mth=Math.PI*2*eio((t-2.1)/2.1);msh=1;}
+    else{mx=lerp(300,HDR.mk.x,tr);my=lerp(CY,HDR.mk.y,tr);mR=lerp(R0,46,tr);mth=Math.PI*2;ma=1-ease((tr-.4)/.4);msh=1-tr;}
+    emergeFx(g,540,CY,R0,(t-2.1)/.9);
+    spinDisc(g,mx,my,mR,mth,PAL_G,function(g,q){goldFront(g,q,s)},goldBack,{alpha:ma,shadow:msh});
+  }
+  var pa=o.wide?0:ease((tr-.55)/.4);makingPill(g,s,HDR.mk.x,HDR.mk.y,pa,false,.9+.1*pa);
+  var ca=ap(t,3.3,.5)*(1-ap(t,TT-.3,.4));
+  if(ca>0){g.save();g.globalAlpha=ca;
+    var l1='FREE Silver Coin*',l2='Flat Making Charge*',cz=Math.min(fitText(g,l1,{fam:'c',weight:700,size:54},380),fitText(g,l2,{fam:'c',weight:700,size:54},380));
+    if(s.showCoin!==false){T(g,l1,800,CY+R0+105,{fam:'c',weight:700,size:cz,color:C.iv});T(g,'har khareed par',800,CY+R0+150,{weight:500,size:28,color:C.ch});}
+    T(g,l2,300,CY+R0+105,{fam:'c',weight:700,size:cz,color:C.iv});
+    g.restore();}
+  if(o.disc)T(g,s.disclaimer,540,1650,{weight:400,size:24,color:C.ch,alpha:.9*ap(t,3.2,.5)});
+}
+function drawCoinRate(g,s,t){introLayer(g,s,t,{});drawRates3(g,s,t,5.5,true);footer(g,s,t,1540,true,3.2);}
+
+var TEMPLATES=[
+{id:'rate',name:'1. Aaj ka Gold Rate (24K, 22K, 20K)',D:8,media:false,draw:function(g,s,t){
+  bg(g,true,t);drawRates3(g,s,t,.2,true);footer(g,s,t,1540,true,2.6);}},
+{id:'ratemedia',name:'2. Rate + Jewellery Clip',D:8,media:true,draw:function(g,s,t){
+  bg(g,true,t);
+  mediaWin(g,s,100,372,880,620,t,.3,true);
+  T(g,'Aaj ka Gold Rate  |  '+badge(g,s),540,1070,{weight:600,size:34,color:C.ch,alpha:ap(t,1.0,.5)});
+  [['24K',s.rate24],['22K',s.rate22],['20K',s.rate20]].forEach(function(c,i){rateTile(g,100+i*300,1100,280,230,c[0],c[1],t,1.2+i*.3,true)});
+  footer(g,s,t,1575,true,2.5);}},
+{id:'breakdown',name:'3. Price Breakdown + Clip',D:11,media:true,draw:function(g,s,t){
+  var c=calc(s);bg(g,false,t);head(g,s,t,false);
+  T(g,s.design||'Aaj ka Design',540,420,{fam:'c',weight:700,size:62,color:C.pine,alpha:ap(t,.3,.5)});
+  mediaWin(g,s,110,470,860,430,t,.4,false);
+  var y0=960,a=ap(t,1.0,.5);g.save();g.globalAlpha=a;g.fillStyle=C.pine;rr(g,90,y0,900,470,28);g.fill();g.restore();
+  var rows=[['Sone ki keemat',s.weight+' g  x  '+inr(c.rate/10)+' / g',c.gv],['Making charge '+(+s.making.toFixed(2))+'%','',c.mk]];
+  if(c.oth>0)rows.push(['Stone / other charges','',c.oth]);
+  if(s.showGst)rows.push(['GST '+(+s.gst.toFixed(2))+'%','',c.gst]);
+  var yy=y0+68;
+  rows.forEach(function(r,i){var ra=ap(t,1.4+i*.6,.45);g.save();g.globalAlpha=ra;T(g,r[0],130,yy+(1-ra)*14,{weight:600,size:36,color:C.iv,align:'left'});
+    if(r[1])T(g,r[1],130,yy+36+(1-ra)*14,{weight:400,size:26,color:C.ch,align:'left'});
+    T(g,inr(count(r[2],t,1.5+i*.6,.7)),950,yy+(1-ra)*14,{weight:700,size:42,color:C.iv,align:'right'});g.restore();yy+=(r[1]?96:84);});
+  var ta=ap(t,1.4+rows.length*.6,.5);g.save();g.globalAlpha=ta;g.strokeStyle=C.ch;g.lineWidth=2;g.beginPath();g.moveTo(130,y0+345);g.lineTo(950,y0+345);g.stroke();
+  T(g,'Total ('+s.karat+')',130,y0+420,{weight:700,size:44,color:C.ch,align:'left'});
+  T(g,inr(count(c.total,t,1.6+rows.length*.6,1.2)),950,y0+425,{weight:700,size:70,color:C.ch,align:'right'});g.restore();
+  footer(g,s,t,1500,false,2.0);}},
+{id:'total',name:'4. Total Cost Reveal + Clip',D:9,media:true,draw:function(g,s,t){
+  var c=calc(s);bg(g,true,t);head(g,s,t,true);
+  mediaWin(g,s,100,370,880,660,t,.3,true);
+  T(g,s.design||'Aaj ka Design',540,1112,{fam:'c',weight:700,size:56,color:C.iv,alpha:ap(t,.9,.5)});
+  T(g,s.karat+'  |  '+s.weight+' gram  |  making '+(+s.making.toFixed(2))+'%*',540,1166,{weight:500,size:32,color:C.ch,alpha:ap(t,1.1,.5)});
+  var a=ap(t,1.5,.6);g.save();g.globalAlpha=a;g.fillStyle=C.iv;rr(g,100,1210,880,200,30);g.fill();g.strokeStyle=C.gold;g.lineWidth=2.5;rr(g,112,1222,856,176,22);g.stroke();
+  T(g,'Total Cost',540,1274,{weight:600,size:34,color:C.gt,track:.12});
+  T(g,inr(count(c.total,t,1.7,1.4)),540,1366,{weight:700,size:104,color:C.pine});g.restore();
+  T(g,'Gold '+inr(c.gv)+'  +  Making '+inr(c.mk)+(s.showGst?'  +  GST '+inr(c.gst):''),540,1440,{weight:500,size:28,color:C.ch,alpha:ap(t,3.2,.5)});
+  footer(g,s,t,1545,true,3.4);}},
+{id:'chart',name:'5. Weight-wise Price Chart',D:10,media:false,draw:function(g,s,t){
+  bg(g,false,t);
+  T(g,'Aaj ka Hisaab',540,450,{fam:'c',weight:700,size:92,color:C.pine,alpha:ap(t,.3,.6)});
+  T(g,badge(g,s)+'  |  making '+(+s.making.toFixed(2))+'%*'+(s.showGst?' + GST':''),540,506,{weight:500,size:30,color:'#5E564D',alpha:ap(t,.5,.5)});
+  var x0=90,w=900,y0=560,rh=112,wts=s.chartWeights,cols=[['24K',470],['22K',720],['20K',960]];
+  g.save();g.globalAlpha=ap(t,.7,.5);g.fillStyle=C.pine;rr(g,x0,y0,w,80,22);g.fill();
+  T(g,'Weight',x0+40,y0+53,{weight:700,size:32,color:C.ch,align:'left'});cols.forEach(function(c){T(g,c[0],c[1],y0+53,{weight:700,size:34,color:C.ch,align:'right'})});g.restore();
+  wts.forEach(function(wg,i){var ra=ap(t,1.0+i*.35,.45),y=y0+94+i*rh;g.save();g.globalAlpha=ra;g.translate((1-ra)*60,0);
+    g.fillStyle=(i%2?C.iv:'#EFE6D2');rr(g,x0,y,w,rh-10,18);g.fill();
+    T(g,wg+' g',x0+40,y+66,{weight:700,size:44,color:C.pine,align:'left'});
+    cols.forEach(function(c,j){var v=calc({karat:c[0],rate24:s.rate24,rate22:s.rate22,rate20:s.rate20,weight:wg,making:s.making,other:0,showGst:s.showGst,gst:s.gst}).total;
+      T(g,inr(count(v,t,1.1+i*.35,.7)),c[1],y+66,{weight:700,size:fitText(g,inr(v),{weight:700,size:40},232),color:j===2?C.gt:C.pine,align:'right'});});
+    g.restore();});
+  var fn='Rate per 10 g:  24K '+inr(s.rate24)+'  |  22K '+inr(s.rate22)+'  |  20K '+inr(s.rate20);
+  T(g,fn,540,y0+94+wts.length*rh+26,{weight:500,size:fitText(g,fn,{weight:500,size:26},880),color:'#5E564D',alpha:ap(t,3.4,.5)});
+  footer(g,s,t,1500,false,3.6);}},
+{id:'explain',name:'6. Making Charge Explained',D:12,media:false,draw:function(g,s,t){
+  var c=calc(s);bg(g,true,t);head(g,s,t,true);
+  T(g,'Price kaise banta hai?',540,470,{fam:'c',weight:700,size:88,color:C.ch,alpha:ap(t,.3,.6)});
+  T(g,'Example: '+s.karat+', '+s.weight+' gram',540,530,{weight:500,size:34,color:C.iv,alpha:ap(t,.5,.5)});
+  var steps=[['1','Sone ki keemat','rate x weight',c.gv],['2','Making charge '+(+s.making.toFixed(2))+'%*','sone ki keemat ka '+(+s.making.toFixed(2))+'%',c.mk]];
+  if(s.showGst)steps.push(['3','GST '+(+s.gst.toFixed(2))+'%','sarkari tax',c.gst]);
+  var y=585;
+  steps.forEach(function(st,i){var a=ap(t,1.0+i*1.1,.55);g.save();g.globalAlpha=a;g.translate((1-a)*70,0);
+    g.fillStyle=C.iv;rr(g,100,y,880,190,26);g.fill();g.fillStyle=C.pine;g.beginPath();g.arc(180,y+95,42,0,7);g.fill();T(g,st[0],180,y+110,{weight:700,size:46,color:C.ch});
+    T(g,st[1],250,y+82,{weight:700,size:42,color:C.pine,align:'left'});T(g,st[2],250,y+130,{weight:400,size:30,color:'#5E564D',align:'left'});
+    T(g,inr(count(st[3],t,1.2+i*1.1,.8)),950,y+112,{weight:700,size:56,color:C.pine,align:'right'});g.restore();y+=212;});
+  var ta=ap(t,1.0+steps.length*1.1,.6);g.save();g.globalAlpha=ta;g.fillStyle=C.ch;rr(g,100,y+10,880,210,30);g.fill();
+  T(g,'Aapka Total',130,y+90,{weight:700,size:44,color:C.pine,align:'left'});T(g,'sab kuch milakar'+(c.oth>0?' (stone/other shamil)':''),130,y+136,{weight:500,size:28,color:C.pine,align:'left'});
+  T(g,inr(count(c.total,t,1.2+steps.length*1.1,1.2)),950,y+150,{weight:700,size:84,color:C.pine,align:'right'});g.restore();
+  footer(g,s,t,1560,true,2.0+steps.length*1.1);}},
+{id:'lower',name:'7. Full Clip + Rate Bar',D:8,media:true,draw:function(g,s,t){
+  bg(g,true,t);
+  mediaWin(g,s,80,250,920,880,t,.2,true);
+  var a=ap(t,.8,.6),dy=(1-a)*60;g.save();g.globalAlpha=a;g.translate(0,dy);
+  g.fillStyle=C.pine;rr(g,80,1150,920,205,28);g.fill();g.strokeStyle=C.ch;g.lineWidth=2.5;rr(g,92,1162,896,181,20);g.stroke();
+  T(g,'Aaj ka Gold Rate  |  '+badge(g,s),540,1206,{weight:600,size:28,color:C.ch,track:.04});
+  [['24K',s.rate24,233],['22K',s.rate22,540],['20K',s.rate20,847]].forEach(function(c,i){
+    T(g,c[0],c[2],1258,{weight:700,size:32,color:C.ch,track:.06});
+    T(g,inr(count(c[1],t,1.0+i*.15,.8)),c[2],1322,{weight:700,size:fitText(g,inr(c[1]),{weight:700,size:46},270),color:C.iv});});
+  g.restore();
+  heroBand(g,s,80,1372,920,130,ap(t,1.4,.5),true);
+  T(g,TRUST,540,1550,{weight:600,size:30,color:C.ch,alpha:ap(t,1.9,.5)});
+  logoH(g,540,120,360,C.ch,ap(t,.1,.5));}}
+];
+/* ===== EXTENSION: collection & growth reels ===== */
+var FR=null;
+function fadeRun(g,alpha,fn){if(alpha>=.999)return;if(alpha<=.001){fn(g);return;}if(!FR)FR=ENV.makeCanvas(W,H);var tg=FR.getContext('2d');tg.setTransform(1,0,0,1,0,0);tg.globalAlpha=1;tg.clearRect(0,0,W,H);tg.save();fn(tg);tg.restore();g.save();g.globalAlpha=1-alpha;g.drawImage(FR,0,0);g.restore();}
+function lerp(a,b,k){return a+(b-a)*k}
+function itemTotal(s,it){return calc({karat:it.karat||'22K',rate24:s.rate24,rate22:s.rate22,rate20:s.rate20,weight:+it.weight||0,making:s.making,other:+it.other||0,showGst:s.showGst,gst:s.gst})}
+function validItems(s,max){return (s.items||[]).filter(function(i){return i&&(+i.weight>0)}).slice(0,max||12)}
+function wrapText(g,str,maxW,o){var words=String(str).split(/\s+/),lines=[],cur='';words.forEach(function(w){var test=cur?cur+' '+w:w;if(tw(g,test,o)>maxW&&cur){lines.push(cur);cur=w}else cur=test});if(cur)lines.push(cur);return lines}
+function cover(g,m,x,y,w,h,r,label){
+  g.save();rr(g,x,y,w,h,r);g.clip();g.fillStyle=C.pl;g.fillRect(x,y,w,h);
+  if(m&&m.w&&m.h){var sc=Math.max(w/m.w,h/m.h),dw=m.w*sc,dh=m.h*sc;try{g.drawImage(m.el,x+(w-dw)/2,y+(h-dh)/2,dw,dh);}catch(e){}}
+  else{g.globalAlpha=.35;halo(g,x+w/2,y+h/2-8,Math.min(w,h)*.42,C.ch,4);g.globalAlpha=.55;if(label)T(g,label,x+w/2,y+h/2+Math.min(w,h)*.36,{weight:500,size:Math.max(18,Math.min(w,h)*.085),color:C.ch,alpha:1});}
+  g.restore();
+}
+function gridGeom(N){
+  var cols=N<=4?2:3,rows=Math.ceil(N/cols),pad=28,gap=20,bw=900,cw=(bw-2*pad-(cols-1)*gap)/cols,maxH=900,chh=Math.min(cw,(maxH-2*pad-(rows-1)*gap)/rows),bh=rows*chh+(rows-1)*gap+2*pad,bx=90,by=Math.max(500,930-bh/2),cells=[];
+  for(var i=0;i<N;i++){var r=Math.floor(i/cols),c=i%cols,inRow=(r===rows-1)?(N-r*cols):cols,off=(cols-inRow)*(cw+gap)/2;cells.push({x:bx+pad+off+c*(cw+gap),y:by+pad+r*(chh+gap),w:cw,h:chh});}
+  return {bx:bx,by:by,bw:bw,bh:bh,cells:cells};
+}
+function drawBox(g,geo,a){
+  g.save();g.globalAlpha=a;g.fillStyle='#0B2A24';rr(g,geo.bx,geo.by,geo.bw,geo.bh,32);g.fill();g.strokeStyle=C.ch;g.lineWidth=3;rr(g,geo.bx,geo.by,geo.bw,geo.bh,32);g.stroke();
+  g.lineWidth=1.2;g.globalAlpha=a*.6;rr(g,geo.bx+10,geo.by+10,geo.bw-20,geo.bh-20,24);g.stroke();
+  [[geo.bx,geo.by],[geo.bx+geo.bw,geo.by],[geo.bx,geo.by+geo.bh],[geo.bx+geo.bw,geo.by+geo.bh]].forEach(function(p){g.globalAlpha=a;g.fillStyle=C.ch;dia(g,p[0],p[1],11)});
+  g.restore();
+}
+function drawCell(g,cell,a,sc){
+  g.save();g.globalAlpha=a;var cx=cell.x+cell.w/2,cy=cell.y+cell.h/2;g.translate(cx,cy);g.scale(sc,sc);g.translate(-cx,-cy);
+  g.fillStyle='#1B4A41';rr(g,cell.x,cell.y,cell.w,cell.h,20);g.fill();g.strokeStyle='#0B2A24';g.lineWidth=5;rr(g,cell.x,cell.y,cell.w,cell.h,20);g.stroke();g.restore();
+}
+function rankBadge(g,x,y,r,txt,a){g.save();g.globalAlpha=a;g.fillStyle=C.ch;g.beginPath();g.arc(x,y,r,0,7);g.fill();g.strokeStyle=C.pine;g.lineWidth=3;g.beginPath();g.arc(x,y,r-5,0,7);g.stroke();T(g,txt,x,y+r*.34,{weight:700,size:r*.95,color:C.pine});g.restore();}
+function priceTag(g,cell,txt,a){g.save();g.globalAlpha=a;var w=cell.w-30,h=Math.min(46,cell.h*.2);g.fillStyle=C.iv;rr(g,cell.x+15,cell.y+cell.h-h-14,w,h,h/2);g.fill();T(g,txt,cell.x+cell.w/2,cell.y+cell.h-14-h*.28,{weight:700,size:Math.min(30,h*.66),color:C.pine});g.restore();}
+function topNTimes(s){var N=validItems(s).length||1,per=s.per||2.3,tg0=1.2,tg1=tg0+N*.1+.5,tf0=tg1+.3,tfin=tf0+N*per,tcta=tfin+2.0;return {N:N,per:per,tg0:tg0,tg1:tg1,tf0:tf0,tfin:tfin,tcta:tcta,D:tcta+2.6}}
+function titleLine(s){return s.collTitle||'Top Picks'}
+function subLine(s){return s.showBudget&&+s.budget>0?'under '+inr(+s.budget):'aaj ke gold rate par'}
+function drawTopN(g,s,t){
+  var items=validItems(s),N=items.length,K=topNTimes(s);s._active=-1;bg(g,true,t);
+  if(!N){T(g,'Add items below',540,900,{weight:600,size:44,color:C.ch});return;}
+  var ctaA=ap(t,K.tcta,.4);fadeRun(g,ctaA,function(g){var geo=gridGeom(N),order=[];for(var i=0;i<N;i++)order.push(s.countdown===false?i:N-1-i);
+  // header
+  var hp=ease((t-.8)/.7),ttl=titleLine(s),sz=Math.min(118,860/(ttl.length*.5)),size=lerp(sz,Math.min(66,sz),hp),y=lerp(860,418,hp);
+  logoH(g,540,480,560,C.ch,1-hp);
+  var ta=ap(t,.2,.5);T(g,ttl,540,y+(1-ta)*20,{fam:'c',weight:700,size:Math.min(sz,size),color:C.iv,alpha:ta});
+  T(g,subLine(s),540,y+lerp(70,50,hp),{weight:600,size:lerp(46,36,hp),color:C.ch,alpha:ap(t,.5,.5),track:.05});
+  var k=-1,p=0,fa=0,act=-1;
+  if(t>=K.tf0&&t<K.tfin){k=Math.floor((t-K.tf0)/K.per);p=((t-K.tf0)-k*K.per)/K.per;act=order[k];fa=p<.14?ease(p/.14):(p>.86?ease((1-p)/.14):1);}
+  s._active=act;
+  var doneCount=t>=K.tfin?N:(k<0?0:k+(p>.9?1:0)),doneSet={};for(i=0;i<doneCount;i++)doneSet[order[i]]=1;
+  var boxA=(1-fa);
+  drawBox(g,geo,boxA*ap(t,K.tg0-.1,.4));
+  items.forEach(function(it,i){var c=geo.cells[i],ca=ap(t,K.tg0+i*.1,.4)*boxA;if(ca<=0)return;var sc=.85+.15*ap(t,K.tg0+i*.1,.4);
+    drawCell(g,c,ca,sc);
+    if(!(i===act&&fa>0)){g.save();g.globalAlpha=ca;var cx=c.x+c.w/2,cy=c.y+c.h/2;g.translate(cx,cy);g.scale(sc,sc);g.translate(-cx,-cy);cover(g,it.media,c.x+8,c.y+8,c.w-16,c.h-16,14,it.name);g.restore();
+      rankBadge(g,c.x+36,c.y+36,26,String(i+1),ca);if(doneSet[i])priceTag(g,c,inr(itemTotal(s,it).total),ca);}});
+  if(act>=0&&fa>0){
+    var it=items[act],c=geo.cells[act],F={x:110,y:490,w:860,h:550},r={x:lerp(c.x,F.x,fa),y:lerp(c.y,F.y,fa),w:lerp(c.w,F.w,fa),h:lerp(c.h,F.h,fa)};
+    g.save();g.globalAlpha=Math.min(1,fa*1.5);cover(g,it.media,r.x,r.y,r.w,r.h,26,it.name);g.strokeStyle=C.ch;g.lineWidth=3;rr(g,r.x-8,r.y-8,r.w+16,r.h+16,32);g.stroke();g.restore();
+    rankBadge(g,r.x+62,r.y+62,46,'#'+(act+1),fa);
+    var pa=ease((p-.14)/.18)*(p>.88?ease((1-p)/.12):1),c2=itemTotal(s,it);g.save();g.globalAlpha=pa;g.translate(0,(1-pa)*40);
+    T(g,it.name||('Design '+(act+1)),540,1105,{fam:'c',weight:700,size:56,color:C.iv});
+    T(g,(it.karat||'22K')+'  |  '+(+it.weight)+' gram'+(c2.oth>0?'  |  stone/other '+inr(c2.oth):''),540,1150,{weight:500,size:32,color:C.ch});
+    var rows=[['Sone ki keemat',c2.gv,.2],['Making '+(+s.making.toFixed(2))+'%*',c2.mk,.3]];if(s.showGst)rows.push(['GST '+(+s.gst.toFixed(2))+'%',c2.gst,.4]);
+    var yy=1212;rows.forEach(function(rw){T(g,rw[0],150,yy,{weight:500,size:34,color:C.iv,align:'left'});T(g,inr(count(rw[1],p,rw[2],.22)),930,yy,{weight:700,size:38,color:C.iv,align:'right'});yy+=56;});
+    g.strokeStyle=C.ch;g.lineWidth=2;g.beginPath();g.moveTo(150,yy-22);g.lineTo(930,yy-22);g.stroke();
+    T(g,'Total',150,yy+52,{weight:700,size:46,color:C.ch,align:'left'});T(g,inr(count(c2.total,p,.45,.3)),930,yy+60,{weight:700,size:78,color:C.ch,align:'right'});g.restore();
+  }
+  if(t>=K.tfin){var sa=ap(t,K.tfin,.5)*(1-ctaA);T(g,'Sab ke daam, aaj ke rate par',540,geo.by+geo.bh+80,{weight:600,size:38,color:C.iv,alpha:sa});
+    T(g,'Making flat '+(+s.making.toFixed(2))+'%*  |  Hallmark Card Available',540,geo.by+geo.bh+130,{weight:500,size:30,color:C.ch,alpha:sa});}
+  });
+  if(t>=K.tcta)ctaBlock(g,s,t,K.tcta);
+}
+function vsTimes(s){return {D:8.5}}
+function drawVs(g,s,t){
+  var it=validItems(s,2);s._active=-1;bg(g,true,t);var cA=ap(t,6.2,.4);fadeRun(g,cA,function(g){head(g,s,t,true);
+  T(g,s.collTitle||'Aapka Pick Kaunsa?',540,445,{fam:'c',weight:700,size:Math.min(84,860/((s.collTitle||'Aapka Pick Kaunsa?').length*.5)),color:C.ch,alpha:ap(t,.2,.5)});
+  if(it.length<2){T(g,'Add 2 items below',540,900,{weight:600,size:44,color:C.ch});return;}
+  [0,1].forEach(function(i){var a=ap(t,.5+i*.3,.6),dx=(i?1:-1)*(1-a)*120,x=i?555:75,w=450,y=480,h=560,c=itemTotal(s,it[i]);
+    g.save();g.globalAlpha=a;g.translate(dx,0);cover(g,it[i].media,x,y,w,h,26,it[i].name);g.strokeStyle=C.ch;g.lineWidth=3;rr(g,x-8,y-8,w+16,h+16,32);g.stroke();
+    rankBadge(g,x+56,y+56,42,i?'B':'A',1);
+    g.fillStyle=C.iv;rr(g,x,y+h+30,w,300,24);g.fill();
+    T(g,it[i].name||('Design '+(i?'B':'A')),x+w/2,y+h+88,{fam:'c',weight:700,size:44,color:C.pine});
+    T(g,(it[i].karat||'22K')+'  |  '+(+it[i].weight)+' g',x+w/2,y+h+132,{weight:500,size:30,color:C.gt});
+    T(g,'Total',x+w/2,y+h+190,{weight:600,size:28,color:C.gt,track:.1});
+    T(g,inr(count(c.total,t,1.6,1.2)),x+w/2,y+h+262,{weight:700,size:62,color:C.pine});g.restore();});
+  var va=ap(t,1.0,.5);g.save();g.globalAlpha=va;g.fillStyle=C.ch;g.beginPath();g.arc(540,760,48,0,7);g.fill();T(g,'VS',540,778,{weight:700,size:44,color:C.pine});g.restore();
+  T(g,'Aapko kaunsa pasand? Comment mein A ya B likhiye',540,1450,{fam:'c',style:'italic',weight:600,size:46,color:C.iv,alpha:ap(t,3.2,.6)});
+  T(g,'Rates aaj ke gold rate par  |  making flat '+(+s.making.toFixed(2))+'%*',540,1510,{weight:500,size:28,color:C.ch,alpha:ap(t,3.6,.5)});
+  T(g,s.disclaimer,540,1560,{weight:400,size:22,color:C.ch,alpha:.75*ap(t,3.8,.4)});
+  });
+  if(t>=6.2)ctaBlock(g,s,t,6.2);
+}
+function guessTimes(s){var N=Math.min(validItems(s).length||1,8),per=s.per2||4.2;return {N:N,per:per,t0:1.6,D:1.6+N*per+3.0}}
+function drawGuess(g,s,t){
+  var items=validItems(s,8),K=guessTimes(s);s._active=-1;bg(g,false,t);head(g,s,t,false);
+  T(g,s.collTitle||'Daam Batao!',540,445,{fam:'c',weight:700,size:Math.min(90,860/((s.collTitle||'Daam Batao!').length*.5)),color:C.pine,alpha:ap(t,.2,.5)});
+  if(!items.length){T(g,'Add items below',540,900,{weight:600,size:44,color:C.pine});return;}
+  if(t<K.t0){T(g,'Guess karein: kitne ka hoga?',540,1000,{fam:'c',style:'italic',weight:600,size:56,color:C.gt,alpha:ap(t,.6,.5)});return;}
+  if(t>=K.t0+K.N*K.per){bg(g,true,t);ctaBlock(g,s,t,K.t0+K.N*K.per);return;}
+  var k=Math.min(K.N-1,Math.floor((t-K.t0)/K.per)),p=((t-K.t0)-k*K.per)/K.per,it=items[k];s._active=k;var c=itemTotal(s,it),a=ap(p,0,.08)*(p>.95?ease((1-p)/.05):1);
+  g.save();g.globalAlpha=a;cover(g,it.media,110,470,860,620,26,it.name);g.strokeStyle=C.gold;g.lineWidth=3;rr(g,102,462,876,636,32);g.stroke();
+  rankBadge(g,172,532,46,'#'+(k+1),1);
+  T(g,it.name||('Design '+(k+1)),540,1160,{fam:'c',weight:700,size:54,color:C.pine});
+  T(g,(it.karat||'22K')+'  |  '+(+it.weight)+' gram',540,1206,{weight:500,size:32,color:C.gt});
+  if(p<.5){var cd=3-Math.floor(p/.5*3);T(g,'Guess the price?',540,1310,{weight:700,size:60,color:C.pine});
+    g.strokeStyle=C.pine;g.lineWidth=8;g.lineCap='round';g.beginPath();g.arc(540,1420,50,-Math.PI/2,-Math.PI/2+2*Math.PI*((p/.5)%(1/3))*3);g.stroke();T(g,String(Math.max(1,cd)),540,1440,{weight:700,size:56,color:C.pine});}
+  else{var rp=(p-.5)/.5;g.fillStyle=C.pine;rr(g,150,1260,780,200,30);g.fill();T(g,'Total (aaj ke rate par)',540,1320,{weight:600,size:30,color:C.ch,track:.06});
+    T(g,inr(count(c.total,rp,0,.4)),540,1415,{weight:700,size:96,color:C.ch});T(g,'Gold '+inr(c.gv)+'  +  Making '+inr(c.mk)+(s.showGst?'  +  GST '+inr(c.gst):''),540,1498,{weight:500,size:26,color:C.pine,alpha:ease((rp-.3)/.3)});}
+  g.restore();
+}
+function setTimes(s){var N=Math.min(validItems(s).length||1,6),per=2.6;return {N:N,per:per,t0:1.8,D:1.8+N*per+3.2}}
+function drawSet(g,s,t){
+  var items=validItems(s,6),K=setTimes(s);s._active=-1;bg(g,true,t);head(g,s,t,true);
+  T(g,s.collTitle||'Poore Set Ka Hisaab',540,445,{fam:'c',weight:700,size:Math.min(84,860/((s.collTitle||'Poore Set Ka Hisaab').length*.5)),color:C.ch,alpha:ap(t,.2,.5)});
+  if(!items.length){T(g,'Add items below',540,900,{weight:600,size:44,color:C.ch});return;}
+  var k=Math.min(K.N-1,Math.max(-1,Math.floor((t-K.t0)/K.per))),shown=t<K.t0?0:Math.min(K.N,k+1);if(t>=K.t0+K.N*K.per)shown=K.N;
+  var p=k>=0?((t-K.t0)-k*K.per)/K.per:0,cur=k>=0&&k<K.N?items[k]:null;s._active=(t>=K.t0&&t<K.t0+K.N*K.per)?k:-1;
+  var mi=cur?cur:items[0];g.save();g.globalAlpha=ap(t,.5,.5);cover(g,mi.media,110,470,860,470,26,mi.name);g.strokeStyle=C.ch;g.lineWidth=3;rr(g,102,462,876,486,32);g.stroke();g.restore();
+  g.save();g.globalAlpha=ap(t,.9,.5);g.fillStyle=C.iv;rr(g,100,980,880,520,28);g.fill();g.restore();
+  var y=1040,run=0;for(var i=0;i<shown;i++){var c=itemTotal(s,items[i]),ia=(i===shown-1&&t<K.t0+K.N*K.per)?ease(p/.35):1;run+=c.total;
+    g.save();g.globalAlpha=ia;g.translate((1-ia)*60,0);T(g,(items[i].name||('Item '+(i+1))),140,y,{weight:600,size:34,color:C.pine,align:'left'});T(g,inr(c.total),940,y,{weight:700,size:36,color:C.pine,align:'right'});
+    g.strokeStyle='#D9CBB0';g.lineWidth=1.5;g.beginPath();g.moveTo(140,y+16);g.lineTo(940,y+16);g.stroke();g.restore();y+=58;}
+  var ended=t>=K.t0+K.N*K.per,ta=shown>0?1:0;g.save();g.globalAlpha=ta;g.fillStyle=C.pine;rr(g,120,1380,840,100,24);g.fill();
+  T(g,ended?'Poore set ka total':'Ab tak ka total',150,1445,{weight:700,size:34,color:C.ch,align:'left'});
+  var tot=0;for(i=0;i<shown;i++)tot+=itemTotal(s,items[i]).total;T(g,inr(tot),930,1452,{weight:700,size:56,color:C.ch,align:'right'});g.restore();
+  if(ended)T(g,'Making flat '+(+s.making.toFixed(2))+'%*  |  Hallmark Card Available',540,1530,{weight:500,size:28,color:C.ch,alpha:ap(t,K.t0+K.N*K.per,.5)});
+}
+function drawHistory(g,s,t){
+  var h=(s.history||[]).slice(-7);bg(g,true,t);head(g,s,t,true);
+  T(g,'Pichhle '+Math.max(h.length,2)+' din ka Gold Rate',540,450,{fam:'c',weight:700,size:78,color:C.ch,alpha:ap(t,.2,.5)});T(g,'22K, per 10 gram',540,505,{weight:500,size:34,color:C.iv,alpha:ap(t,.4,.5)});
+  if(h.length<2){T(g,'Rate history abhi kam hai.',540,900,{weight:600,size:44,color:C.iv});T(g,'2 ya zyada din ke rate confirm karein.',540,960,{weight:400,size:34,color:C.ch});return;}
+  var x0=140,x1=940,y0=620,y1=1060,vals=h.map(function(r){return r.r22}),mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),pad=Math.max(300,(mx-mn)*.35),lo=mn-pad,hi=mx+pad;
+  var pts=h.map(function(r,i){return {x:x0+(x1-x0)*i/(h.length-1),y:y1-(r.r22-lo)/(hi-lo)*(y1-y0),v:r.r22,d:r.d}});
+  g.save();g.globalAlpha=ap(t,.7,.5);g.fillStyle='#0B2A24';rr(g,90,570,900,560,28);g.fill();g.strokeStyle=C.ch;g.lineWidth=2;rr(g,90,570,900,560,28);g.stroke();g.restore();
+  var pr=ease((t-1.0)/2.4);g.save();g.strokeStyle=C.ch;g.lineWidth=7;g.lineJoin='round';g.lineCap='round';g.beginPath();
+  var tot=pts.length-1,upto=pr*tot;g.moveTo(pts[0].x,pts[0].y);for(var i=1;i<pts.length;i++){if(upto>=i)g.lineTo(pts[i].x,pts[i].y);else if(upto>i-1){var f=upto-(i-1);g.lineTo(lerp(pts[i-1].x,pts[i].x,f),lerp(pts[i-1].y,pts[i].y,f));break;}}g.stroke();
+  pts.forEach(function(p,i){if(upto>=i-.001){g.fillStyle=C.iv;g.beginPath();g.arc(p.x,p.y,11,0,7);g.fill();g.strokeStyle=C.gold;g.lineWidth=3;g.beginPath();g.arc(p.x,p.y,11,0,7);g.stroke();
+    var d=new Date(p.d+'T00:00:00'),lab=isNaN(d)?'':d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];T(g,lab,p.x,y1+50,{weight:500,size:26,color:C.iv});}});g.restore();
+  var last=pts[pts.length-1],prev=pts[pts.length-2],diff=last.v-prev.v,la=ap(t,3.2,.5);
+  T(g,inr(last.v),Math.min(last.x,830),Math.max(last.y-28,600),{weight:700,size:34,color:C.iv,alpha:la});
+  g.save();g.globalAlpha=ap(t,3.4,.5);g.fillStyle=C.iv;rr(g,100,1170,880,200,28);g.fill();
+  T(g,'Aaj ka rate (22K)',140,1232,{weight:600,size:32,color:C.gt,align:'left'});T(g,inr(last.v),940,1236,{weight:700,size:66,color:C.pine,align:'right'});
+  T(g,diff===0?'Kal jitna hi':'Kal se '+inr(Math.abs(diff))+(diff>0?' upar':' neeche'),140,1330,{weight:700,size:42,color:diff>0?C.garn:C.pine,align:'left'});g.restore();
+  T(g,'Daily rate ke liye follow karein',540,1450,{weight:500,size:34,color:C.ch,alpha:ap(t,4.2,.5)});footer(g,s,t,1530,true,4.6);
+}
+function tipsTimes(s){var N=(s.tips||[]).filter(Boolean).slice(0,6).length||1;return {N:N,D:Math.max(8,2.0+N*1.5+3.0)}}
+function drawTips(g,s,t){
+  var tips=(s.tips||[]).map(function(x){return String(x).trim()}).filter(Boolean).slice(0,6);bg(g,false,t);head(g,s,t,false);
+  var ttl=s.tipsTitle||'Gold kharidne se pehle 5 baatein';var lines=wrapText(g,ttl,880,{fam:'c',weight:700,size:70});
+  lines.slice(0,2).forEach(function(l,i){T(g,l,540,440+i*76,{fam:'c',weight:700,size:70,color:C.pine,alpha:ap(t,.2,.5)})});
+  var y=lines.length>1?600:560,ch=Math.min(190,(1380-y)/Math.max(tips.length,1)-14);
+  tips.forEach(function(tip,i){var a=ap(t,1.2+i*1.5,.55);g.save();g.globalAlpha=a;g.translate((1-a)*80,0);g.fillStyle=C.pine;rr(g,90,y,900,ch,24);g.fill();
+    g.fillStyle=C.ch;g.beginPath();g.arc(160,y+ch/2,36,0,7);g.fill();T(g,String(i+1),160,y+ch/2+14,{weight:700,size:40,color:C.pine});
+    var ls=wrapText(g,tip,700,{weight:600,size:38}),lh=48,sy=y+ch/2-(ls.length-1)*lh/2+13;ls.slice(0,3).forEach(function(l,j){T(g,l,230,sy+j*lh,{weight:600,size:38,color:C.iv,align:'left'})});g.restore();y+=ch+14;});
+  T(g,'Save karein, kaam aayega',540,1450,{fam:'c',style:'italic',weight:600,size:48,color:C.gt,alpha:ap(t,2.0+tips.length*1.5,.5)});footer(g,s,t,1520,false,2.4+tips.length*1.5);
+}
+function star(g,cx,cy,r,col){g.save();g.fillStyle=col;g.beginPath();for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5,rad=i%2?r*.45:r;g.lineTo(cx+rad*Math.cos(a),cy+rad*Math.sin(a));}g.closePath();g.fill();g.restore();}
+function drawTesti(g,s,t){
+  bg(g,true,t);head(g,s,t,true);s._active=-1;
+  mediaWin(g,s,110,400,860,620,t,.3,true);
+  for(var i=0;i<5;i++){var a=ap(t,1.0+i*.15,.3);g.save();g.globalAlpha=a;star(g,540+(i-2)*70,1100,28,C.ch);g.restore();}
+  var q=s.quote||'Bahut accha design aur saaf hisaab mila.',ls=wrapText(g,'\u201C'+q+'\u201D',840,{fam:'c',style:'italic',weight:600,size:56}),qa=ap(t,1.6,.7);
+  ls.slice(0,4).forEach(function(l,i){T(g,l,540,1190+i*66,{fam:'c',style:'italic',weight:600,size:56,color:C.iv,alpha:qa})});
+  T(g,s.quoteName||'Customer name, town',540,1190+Math.min(ls.length,4)*66+30,{weight:600,size:34,color:C.ch,alpha:ap(t,2.4,.5)});
+  T(g,'(Customer ki anumati se)',540,1190+Math.min(ls.length,4)*66+72,{weight:400,size:24,color:C.iv,alpha:.7*ap(t,2.6,.5)});
+  footer(g,s,t,1540,true,3.2);
+}
+
+
+TEMPLATES.forEach(function(x){x.group='price'});
+TEMPLATES.unshift({id:'coinrate',name:'NEW: Silver Coin + Making Charge Intro, then 24K / 22K / 20K',group:'price',D:12,media:false,ownHeader:true,draw:drawCoinRate});
+TEMPLATES.push(
+ {id:'topn',name:'8. Top N Countdown (display box)',group:'coll',needs:'items coll',D:function(s){return topNTimes(s).D},draw:drawTopN},
+ {id:'vs',name:'9. This or That (2 items)',group:'coll',needs:'items coll',D:9,draw:drawVs},
+ {id:'guess',name:'10. Guess the Price',group:'coll',needs:'items coll',D:function(s){return guessTimes(s).D},draw:drawGuess},
+ {id:'setb',name:'11. Complete Set Price Builder',group:'coll',needs:'items coll',D:function(s){return setTimes(s).D},draw:drawSet},
+ {id:'hist',name:'12. Gold Rate: Last 7 Days',group:'grow',needs:'history',D:8.5,draw:drawHistory},
+ {id:'tips',name:'13. Tips List (save-worthy)',group:'grow',needs:'tips',D:function(s){return tipsTimes(s).D},draw:drawTips},
+ {id:'testi',name:'14. Customer Words + Clip',group:'grow',needs:'testi',media:true,D:8,draw:drawTesti}
+);
+
+TEMPLATES.push(
+ {id:'fest',name:'15. Festival Wishes (diyas)',group:'daily',D:9,fields:[{k:'festName',l:'Festival / occasion',d:'Shubh Dhanteras'},{k:'festMsg',l:'Wish message',d:'Aapke parivaar ko dhan, sukh aur samriddhi ki shubhkamnayein.',t:'ta'}],draw:drawFest},
+ {id:'count',name:'16. Festival Countdown (days left)',group:'daily',D:8,fields:[{k:'cdName',l:'Festival name',d:'Dhanteras'},{k:'cdDate',l:'Date (YYYY-MM-DD)',d:'2026-11-06'},{k:'cdMsg',l:'Line under the number',d:'Advance booking shuru'}],draw:drawCount},
+ {id:'newd',name:'17. Naya Design Aaya (new arrival)',group:'daily',D:8,media:true,price:true,fields:[{k:'showPrice',l:'Show total price on this reel',t:'chk',d:true}],draw:drawNewDesign},
+ {id:'handover',name:'18. Mubarak Ho! (customer handover)',group:'daily',D:9,media:true,fields:[{k:'custName',l:'Customer name (with permission)',d:'Priya ji'},{k:'custItem',l:'What they bought',d:'Gold Chain Set'}],draw:drawHandover},
+ {id:'checklist',name:'19. Dulhan Ke Gehne Ki List',group:'daily',D:function(s){return Math.max(8,2+Math.min(8,lines(xv(s,'clText','a\nb\nc\nd\ne\nf')).length)*1.0+3)},light:true,fields:[{k:'clTitle',l:'Title',d:'Dulhan ke gehne ki list'},{k:'clText',l:'Items, one per line (up to 8)',d:'Mangalsutra\nHaar / Necklace set\nJhumke\nKangan / Choodi\nMaang tikka\nPayal / Bichhiya',t:'ta'}],draw:drawChecklist},
+ {id:'myth',name:'20. Sach ya Jhooth? (myth vs fact)',group:'daily',D:function(s){return mythTimes(s).D+2.6},light:true,fields:[{k:'mythText',l:'One per line: myth || fact (up to 3). Write only true facts.',d:'Hallmark sirf badi dukaan mein milta hai || Koi bhi BIS-registered jeweller hallmarked gold bech sakta hai. Hallmark card maangiye.\nGold ka rate har dukaan par alag hota hai || Rate market ke hisaab se chalta hai; farak aksar making charge mein hota hai. Bill par poora hisaab dekhiye.',t:'ta'}],draw:drawMyth},
+ {id:'poll',name:'21. Aaj Ka Sawaal (A or B poll)',group:'daily',D:8,fields:[{k:'pollQ',l:'Question',d:'Aapko kaunsa zyada pasand hai?'},{k:'pollA',l:'Option A',d:'Gold chain'},{k:'pollB',l:'Option B',d:'Mangalsutra'}],draw:drawPoll},
+ {id:'ratechange',name:'22. Rate Badla? (up / down vs yesterday)',group:'daily',D:7.5,needs:'history',draw:drawRateChange},
+ {id:'caption',name:'23. Clip + Caption Lines (shop tour, any clip)',group:'daily',D:8,media:true,fields:[{k:'cap1',l:'Big line',d:'Dukaan ki ek jhalak'},{k:'cap2',l:'Second line',d:'Aaiye, apni aankhon se dekhiye'},{k:'cap3',l:'Small line',d:'Hallmark Card ke saath'}],draw:drawCaptionClip}
+);
+['breakdown','total','chart','explain'].forEach(function(id){TEMPLATES.filter(function(x){return x.id===id})[0].price=true});
+['breakdown','chart','guess','tips'].forEach(function(id){TEMPLATES.filter(function(x){return x.id===id})[0].light=true});
+
+/* ===== FULL-VIDEO REELS ===== */
+function vL(s){var v=parseFloat(xv(s,'vLen',10));return isNaN(v)?10:Math.max(6,Math.min(40,v))}
+function env(t,a,b,fi,fo){return ap(t,a,fi)*(1-ap(t,b,fo))}
+function dglass(g,x,y,w,h,r,a){g.save();g.globalAlpha=a*g.globalAlpha;g.fillStyle='rgba(12,38,34,.78)';rr(g,x,y,w,h,r);g.fill();g.globalAlpha*=.75;g.strokeStyle=C.ch;g.lineWidth=2;rr(g,x,y,w,h,r);g.stroke();g.restore();}
+function fullMedia(g,s,t,L){
+  var m=s.media;g.save();g.fillStyle='#000';g.fillRect(0,0,W,H);
+  if(m&&m.w&&m.h){var isV=m.el&&m.el.tagName==='VIDEO',z=isV?1:1+.07*cl(t/L),sc=Math.max(W/m.w,H/m.h)*z,dw=m.w*sc,dh=m.h*sc;try{g.drawImage(m.el,(W-dw)/2,(H-dh)/2,dw,dh);}catch(e){}}
+  else{g.fillStyle=C.pl;g.fillRect(0,0,W,H);g.globalAlpha=.3;halo(g,540,860,380,C.ch,4);g.globalAlpha=.6;T(g,'FULL VIDEO / PHOTO OF THE DESIGN',540,1120,{weight:500,size:34,color:C.ch,track:.08});}
+  g.globalAlpha=ap(t,0,.8);var gt=g.createLinearGradient(0,0,0,460);gt.addColorStop(0,'rgba(12,38,34,.6)');gt.addColorStop(1,'rgba(12,38,34,0)');g.fillStyle=gt;g.fillRect(0,0,W,460);
+  var gb=g.createLinearGradient(0,1100,0,H);gb.addColorStop(0,'rgba(12,38,34,0)');gb.addColorStop(1,'rgba(12,38,34,.72)');g.fillStyle=gb;g.fillRect(0,1100,W,H-1100);
+  g.restore();
+  logoH(g,540,70,240,C.iv,ap(t,.2,.6)*(1-ap(t,L,.4)));
+}
+function slot(g,t,L,a,b,fn){var al=env(t,a*L,b*L,.7,.9);if(al<=.002)return;var dx=(1-ap(t,a*L,.7))*-90,dy=-ap(t,b*L,.9)*26;g.save();g.translate(dx,dy);fn(g,al);g.restore();}
+function makingChip(g,s,x,cy,a){
+  var n=(+s.making.toFixed(2))+'%',nsz=fitText(g,n,{weight:700,size:60},170),nw=tw(g,n,{weight:700,size:nsz}),w=nw+260;
+  if(a<=0)return w;dglass(g,x,cy-44,w,88,44,a);g.save();g.globalAlpha=a*g.globalAlpha;
+  T(g,n,x+36,cy+nsz*.34,{weight:700,size:nsz,color:C.ch,align:'left'});var lx=x+36+nw+22;
+  T(g,'FLAT MAKING',lx,cy-4,{weight:700,size:23,color:C.iv,align:'left',track:.1});T(g,'CHARGES*',lx,cy+26,{weight:700,size:23,color:C.iv,align:'left',track:.1});
+  g.restore();return w;
+}
+function coinTag(g,s,x,cy,a,t){
+  var l1='FREE Silver Coin*',w=Math.max(tw(g,l1,{weight:700,size:34}),tw(g,'har khareed par',{weight:500,size:24}))+190;
+  dglass(g,x+50,cy-52,w-50,104,52,a);g.save();g.globalAlpha=a*g.globalAlpha;
+  T(g,l1,x+160,cy-2,{weight:700,size:34,color:C.iv,align:'left'});T(g,'har khareed par',x+160,cy+34,{weight:500,size:24,color:C.ch,align:'left'});g.restore();
+  spinDisc(g,x+70,cy,70,t*1.3,PAL_S,function(g,q){silverFront(g,q,s)},silverBack,{alpha:a});
+}
+function capPill(g,txt,cx,cy,a){var o={weight:700,size:34},w=tw(g,txt,o)+70;dglass(g,cx-w/2,cy-36,w,72,36,a);g.save();g.globalAlpha=a*g.globalAlpha;T(g,txt,cx,cy+12,{weight:700,size:34,color:C.iv});g.restore();}
+function totalCard(g,s,x,y,w,a,t,t0){
+  var c=calc(s);dglass(g,x,y,w,264,30,a);g.save();g.globalAlpha=a*g.globalAlpha;
+  var nm=s.design||'Aaj ka Design';T(g,nm,x+36,y+62,{fam:'c',weight:700,size:fitText(g,nm,{fam:'c',weight:700,size:46},w-72),color:C.iv,align:'left'});
+  T(g,s.karat+'  |  '+s.weight+' gram',x+36,y+104,{weight:500,size:28,color:C.ch,align:'left'});
+  T(g,'Total cost',x+36,y+146,{weight:600,size:26,color:C.ch,align:'left',track:.1});
+  T(g,'making '+(+s.making.toFixed(2))+'%*'+(s.showGst?'  |  incl. GST':''),x+w-36,y+146,{weight:500,size:24,color:C.iv,align:'right'});
+  T(g,inr(count(c.total,t,t0,1.2)),x+36,y+236,{weight:700,size:fitText(g,inr(c.total),{weight:700,size:72},w-72),color:C.ch,align:'left'});
+  g.restore();
+}
+function priceCard(g,s,x,bottom,w,a,t,t0,rise){
+  var c=calc(s),rows=[['Sone ki keemat',c.gv],['Making '+(+s.making.toFixed(2))+'%*',c.mk]];if(c.oth>0)rows.push(['Stone / other',c.oth]);if(s.showGst)rows.push(['GST '+(+s.gst.toFixed(2))+'%',c.gst]);
+  var h=156+rows.length*46+96,y=bottom-h+rise;dglass(g,x,y,w,h,30,a);g.save();g.globalAlpha=a*g.globalAlpha;
+  var nm=s.design||'Aaj ka Design';T(g,nm,x+36,y+60,{fam:'c',weight:700,size:fitText(g,nm,{fam:'c',weight:700,size:46},w-72),color:C.iv,align:'left'});
+  T(g,s.karat+'  |  '+s.weight+' gram',x+36,y+100,{weight:500,size:28,color:C.ch,align:'left'});
+  rows.forEach(function(r,i){var yy=y+156+i*46;T(g,r[0],x+36,yy,{weight:500,size:30,color:C.iv,align:'left'});T(g,inr(count(r[1],t,t0+.2+i*.15,.8)),x+w-36,yy,{weight:700,size:32,color:C.iv,align:'right'});});
+  var ly=y+156+rows.length*46-20;g.strokeStyle=C.ch;g.lineWidth=2;g.beginPath();g.moveTo(x+36,ly);g.lineTo(x+w-36,ly);g.stroke();
+  T(g,'Total',x+36,y+h-30,{weight:700,size:36,color:C.ch,align:'left'});T(g,inr(count(c.total,t,t0+.5,1.1)),x+w-36,y+h-26,{weight:700,size:64,color:C.ch,align:'right'});
+  g.restore();
+}
+function vidOutro(g,s,t,L){if(s.closeOn===false)return;
+  var a=ap(t,L,.7);if(a<=0)return;
+  g.save();g.globalAlpha=a;g.fillStyle=C.pine;g.fillRect(0,0,W,H);g.globalAlpha=.07*a;g.fillStyle=g.createPattern(PATTERN,'repeat');g.fillRect(0,0,W,H);
+  g.globalAlpha=.4*a;g.strokeStyle=C.ch;g.lineWidth=2;g.strokeRect(36,36,W-72,H-72);g.restore();
+  ctaBlock(g,s,t,L+.2);
+  if(s.showPolicy!==false)badgePolicy(g,s,false,420,1560,240,90,ap(t,L+1.6,.5));
+}
+var showTot=function(s){return xv(s,'showPrice',true)!==false};
+function drawVidTags(g,s,t){
+  var L=vL(s);fullMedia(g,s,t,L);
+  slot(g,t,L,.10,.34,function(g,al){makingChip(g,s,60,1400+Math.sin(t*1.6)*5,al)});
+  if(s.showCoin!==false)slot(g,t,L,.38,.62,function(g,al){coinTag(g,s,60,1400+Math.sin(t*1.6)*5,al,t)});
+  if(showTot(s))slot(g,t,L,.66,.94,function(g,al){totalCard(g,s,60,1230,620,al,t,.66*L)});
+  vidOutro(g,s,t,L);
+}
+function drawVidLower(g,s,t){
+  var L=vL(s);fullMedia(g,s,t,L);
+  slot(g,t,L,.06,.30,function(g,al){makingChip(g,s,50,260,al)});
+  if(s.showCoin!==false){var al=env(t,.06*L,.30*L,.7,.9);if(al>.002){var dx=(1-ap(t,.06*L,.7))*90;g.save();g.translate(dx,0);
+    spinDisc(g,946,262,66,t*1.2,PAL_S,function(g,q){silverFront(g,q,s)},silverBack,{alpha:al});
+    var l='FREE Silver Coin*',w=tw(g,l,{weight:700,size:26})+44;dglass(g,1010-w,350,w,50,25,al);g.save();g.globalAlpha=al*g.globalAlpha;T(g,l,1010-w/2,384,{weight:700,size:26,color:C.iv});g.restore();g.restore();}}
+  if(showTot(s)){var a2=env(t,.34*L,.88*L,.5,.8);if(a2>.002)priceCard(g,s,60,1600,760,a2,t,.34*L,(1-ap(t,.34*L,.7))*280);}
+  vidOutro(g,s,t,L);
+}
+function rollDisc(g,s,t,L,a,b,fromX,gold,cap){
+  var al=env(t,a*L,b*L,.4,.9);if(al<=.002)return;var Y=1360,p=eio((t-a*L)/(.2*L)),x=lerp(fromX,540,p),dy=-ap(t,b*L,.9)*40,th=(t-a*L)*1.5;
+  g.save();g.translate(0,dy);
+  if(gold)spinDisc(g,x,Y,95,th,PAL_G,function(g,q){goldFront(g,q,s)},goldBack,{alpha:al,shadow:.6});
+  else spinDisc(g,x,Y,95,th,PAL_S,function(g,q){silverFront(g,q,s)},silverBack,{alpha:al,shadow:.6});
+  capPill(g,cap,540,Y+185,al*ap(t,(a+.16)*L,.5));g.restore();
+}
+function drawVidCoin(g,s,t){
+  var L=vL(s);fullMedia(g,s,t,L);
+  if(s.showCoin!==false)rollDisc(g,s,t,L,.08,.40,1220,false,'FREE Silver Coin*');
+  rollDisc(g,s,t,L,.42,.68,-140,true,'Flat Making Charge*');
+  if(showTot(s))slot(g,t,L,.72,.94,function(g,al){totalCard(g,s,220,1230,640,al,t,.72*L)});
+  vidOutro(g,s,t,L);
+}
+function drawVidRates(g,s,t){
+  var L=vL(s);fullMedia(g,s,t,L);
+  var al=env(t,.06*L,.30*L,.7,.9);
+  if(al>.002){var y=190-(1-ap(t,.06*L,.7))*80;dglass(g,50,y,980,170,28,al);g.save();g.globalAlpha=al*g.globalAlpha;
+    T(g,'Aaj ka Gold Rate  |  '+badge(g,s),540,y+42,{weight:600,size:26,color:C.ch,track:.04});
+    [['24K',s.rate24,213],['22K',s.rate22,540],['20K',s.rate20,867]].forEach(function(c,i){T(g,c[0]+' / 10 g',c[2],y+90,{weight:700,size:26,color:C.ch,track:.06});T(g,inr(count(c[1],t,.06*L+.3+i*.2,.8)),c[2],y+146,{weight:700,size:fitText(g,inr(c[1]),{weight:700,size:46},290),color:C.iv});});
+    g.restore();}
+  slot(g,t,L,.34,.62,function(g,al){var w=makingChip(g,s,60,1400,al);if(s.showCoin!==false)spinDisc(g,60+w+100,1400,64,t*1.3,PAL_S,function(g,q){silverFront(g,q,s)},silverBack,{alpha:al});});
+  if(showTot(s))slot(g,t,L,.66,.94,function(g,al){totalCard(g,s,60,1230,620,al,t,.66*L)});
+  vidOutro(g,s,t,L);
+}
+(function(){
+  var F=[{k:'vLen',l:'Seconds of full video before the closing screen (6 to 40)',d:'10'},{k:'showPrice',l:'Show total price on this reel',t:'chk',d:true}];
+  var base={group:'vid',media:true,price:true,ownHeader:true,fields:F,D:function(s){return vL(s)+3.4},png:function(s){return vL(s)*.8}};
+  var defs=[['vidtags','V1. Full Video + Floating Tags (making, coin, total)',drawVidTags],['vidlower','V2. Full Video + Price Card slides up',drawVidLower],['vidcoin','V3. Full Video + Rolling Coins (silver coin, making charge)',drawVidCoin],['vidrates','V4. Full Video + Gold Rate Strip',drawVidRates]];
+  var pos=TEMPLATES.map(function(x){return x.id}).indexOf('topn'),arr=defs.map(function(d){var o={id:d[0],name:d[1],draw:d[2]};for(var k in base)o[k]=base[k];return o});
+  Array.prototype.splice.apply(TEMPLATES,[pos,0].concat(arr));
+})();
+/* ===== end FULL-VIDEO REELS ===== */
+TEMPLATES.push(
+ {id:'sv_new',name:'S1. Silver: Naya Design (price or DM)',group:'silver',silver:true,needs:'sv',media:true,D:8,fields:[{k:'svName',l:'Design name',d:'Silver Payal'},{k:'svNote',l:'One line about it',d:'Naya silver design aaya hai'},{k:'svPrice',l:'Price in Rs (shown only when "DM for price" is unticked)',d:''}],draw:drawSvNew},
+ {id:'sv_top',name:'S2. Silver Top N Countdown (display box)',group:'silver',silver:true,needs:'sv sitems svcoll',D:function(s){return svTopTimes(s).D},png:function(s){return svTopTimes(s).tfin+1.0},draw:drawSvTop},
+ {id:'sv_reveal',name:'S3. Silver Price Reveal (surprise)',group:'silver',silver:true,light:true,needs:'sv sitems svcoll',D:function(s){return svRevTimes(s).D},png:function(s){return 1.6+3.6},fields:[{k:'svRevTitle',l:'Heading',d:'Silver ka daam batao!'}],draw:drawSvReveal},
+ {id:'sv_vs',name:'S4. Silver This or That (2 items)',group:'silver',silver:true,needs:'sv sitems',D:9,png:function(s){return 5.0},fields:[{k:'svVsTitle',l:'Heading',d:'Aapka pick kaunsa?'}],draw:drawSvVs},
+ {id:'sv_clip',name:'S5. Silver Clip + Caption (DM overlay)',group:'silver',silver:true,needs:'sv',media:true,D:8,fields:[{k:'cap1',l:'Big line',d:'Silver ki nayi jhalak'},{k:'cap2',l:'Second line',d:'Roz ke liye, har mauke ke liye'},{k:'svPrice',l:'Price in Rs (shown only when "DM for price" is unticked)',d:''}],draw:drawSvClip}
+);
+
+TEMPLATES.push(
+ {id:'sv_full',name:'S6. Silver Full-screen Product View (DM or price)',group:'silver',silver:true,needs:'sv',media:true,ownHeader:true,D:function(s){return vL(s)+3.4},png:function(s){return vL(s)*.8},fields:[{k:'vLen',l:'Seconds of full-screen view before the closing screen (6 to 40)',d:'10'},{k:'svName',l:'Design name',d:'Silver Payal'},{k:'svNote',l:'One line about it',d:'Naya silver design aaya hai'},{k:'svPrice',l:'Price in Rs (shown only when "DM for price" is unticked)',d:''}],draw:drawSvFull},
+ {id:'sv_full_tags',name:'S7. Silver Full-screen + Feature Tags',group:'silver',silver:true,needs:'sv',media:true,ownHeader:true,D:function(s){return vL(s)+3.4},png:function(s){return vL(s)*.8},fields:[{k:'vLen',l:'Seconds of full-screen view before the closing screen (6 to 40)',d:'10'},{k:'svName',l:'Design name',d:'Silver Payal'},{k:'svNote',l:'One line about it',d:'Naya silver design aaya hai'},{k:'svTag1',l:'Tag 1 (write only true things; leave empty to hide)',d:'Roz pehenne ke liye'},{k:'svTag2',l:'Tag 2',d:'Gift ke liye perfect'},{k:'svTag3',l:'Tag 3',d:'Halka aur sundar'},{k:'svPrice',l:'Price in Rs (shown only when "DM for price" is unticked)',d:''}],draw:drawSvFullTags},
+ {id:'sv_full_show',name:'S8. Silver Full-screen Slideshow (all items)',group:'silver',silver:true,needs:'sv sitems',ownHeader:true,D:function(s){return svShowLen(s)+3.4},png:function(s){return Math.max(1.2,svShowLen(s)*.45)},fields:[{k:'svSlide',l:'Seconds per design (1.5 to 6)',d:'2.6'}],draw:drawSvShow}
+);
+
+TEMPLATES.forEach(function(x){if(x.group==='vid'||x.id==='sv_full'||x.id==='sv_full_tags'||x.id==='sv_full_show')x.hasOutro=true});
+function dur(tp,s){return baseDur(tp,s)+introLen(tp,s)+silverLen(tp,s)}
+
+function arcText(g,txt,cx,cy,r,deg,size,color,track){
+  g.save();g.font='700 '+size+'px '+FP;g.fillStyle=color;g.textAlign='center';g.textBaseline='alphabetic';
+  var ws=[],tot=0,i;for(i=0;i<txt.length;i++){var w=g.measureText(txt[i]).width;ws.push(w);tot+=w;}var tr=(track||0)*size;tot+=tr*(txt.length-1);
+  var pos=0;for(i=0;i<txt.length;i++){var mid=pos+ws[i]/2;pos+=ws[i]+tr;var th=deg*Math.PI/180+(mid-tot/2)/r;
+    g.save();g.translate(cx+r*Math.sin(th),cy-r*Math.cos(th));g.rotate(th);g.fillText(txt[i],0,0);g.restore();}
+  g.restore();
+}
+function coinSeal(g,cx,cy,r,top,big,alpha){
+  var k=r/100;g.save();g.globalAlpha=(alpha==null?1:alpha)*g.globalAlpha;
+  g.fillStyle='rgba(0,0,0,.22)';g.beginPath();g.arc(cx+4*k,cy+7*k,r,0,7);g.fill();
+  var gr=g.createRadialGradient(cx-r*.3,cy-r*.4,r*.1,cx,cy,r*1.05);gr.addColorStop(0,'#F4F6F7');gr.addColorStop(.55,'#C7CDD2');gr.addColorStop(1,'#9AA2A9');
+  g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r,0,7);g.fill();
+  g.strokeStyle='#7E868D';g.lineWidth=2.2*k;g.setLineDash([2.2*k,3.6*k]);g.beginPath();g.arc(cx,cy,r-4*k,0,7);g.stroke();g.setLineDash([]);
+  g.strokeStyle='#6B737A';g.lineWidth=1.6*k;g.beginPath();g.arc(cx,cy,r-14*k,0,7);g.stroke();
+  arcText(g,top||'SILVER COIN',cx,cy,r-27*k,0,15*k,'#3A4147',.14);
+  halo(g,cx,cy-12*k,40*k,'#4A5158',4.5);
+  T(g,big||'FREE*',cx,cy+44*k,{weight:700,size:34*k,color:'#2B3136',track:.04});
+  g.restore();
+}
+function coinOverlay(g,s,tplId,t){
+  if(s.showCoin===false)return;var a=ap(t,1.0,.5),r=(tplId==='lower'||tplId==='caption')?60:72,cx=915,cy=(tplId==='lower'||tplId==='caption')?150:262;
+  g.save();var sc=.85+.15*a;g.translate(cx,cy);g.scale(sc,sc);g.translate(-cx,-cy);coinSeal(g,cx,cy,r,s.coinLabel||'SILVER COIN','FREE*',a);g.restore();
+}
+/* ===== EXTENSION 2: policy badge + regular-post reels ===== */
+function heroBand(g,s,x,y,w,h,a,dark){
+  var n=(+s.making.toFixed(2))+'%';g.save();g.globalAlpha=(a==null?1:a)*g.globalAlpha;g.fillStyle=dark?C.ch:C.pine;rr(g,x,y,w,h,26);g.fill();
+  var ink=dark?C.pine:C.ch,sub=dark?C.pine:C.iv;
+  T(g,'FLAT',x+40,y+34,{weight:700,size:26,color:ink,align:'left',track:.4});
+  var sz=Math.min(h*.72,110);T(g,n,x+36,y+h-16,{weight:700,size:sz,color:ink,align:'left'});
+  var nw=tw(g,n,{weight:700,size:sz}),rx=x+36+nw+40;
+  T(g,'MAKING',rx,y+h*.46,{fam:'c',weight:700,size:Math.min(60,h*.42),color:sub,align:'left',track:.06});T(g,'CHARGES*',rx,y+h*.86,{fam:'c',weight:700,size:Math.min(60,h*.42),color:sub,align:'left',track:.06});
+  g.restore();
+}
+function fitText(g,str,o,maxW){var sz=o.size,w=tw(g,str,{weight:o.weight,size:sz,track:o.track});while(w>maxW&&sz>12){sz-=1;w=tw(g,str,{weight:o.weight,size:sz,track:o.track});}return sz}
+function badgePolicy(g,s,light,x,y,w,h,a){
+  var l1=s.policy1||'CASH ONLY',l2=s.policy2||'NO UDHAR';g.save();g.globalAlpha=a;
+  g.fillStyle=light?C.pine:C.iv;rr(g,x,y,w,h,20);g.fill();g.strokeStyle=light?C.ch:C.gold;g.lineWidth=3;rr(g,x+7,y+7,w-14,h-14,14);g.stroke();
+  var o1={weight:700,size:32,track:.05},o2={weight:700,size:32,track:.05};o1.size=fitText(g,l1,o1,w-48);o2.size=fitText(g,l2,o2,w-48);
+  T(g,l1,x+w/2,y+h*.47,{weight:700,size:o1.size,color:light?C.ch:C.pine,track:.05});T(g,l2,x+w/2,y+h*.84,{weight:700,size:o2.size,color:light?C.iv:C.garn,track:.05});g.restore();
+}
+function badgeCoin(g,s,x,y,w,h,a){
+  var l1=s.coinLabel||'SILVER COIN';g.save();g.globalAlpha=a;
+  var gr=g.createLinearGradient(x,y,x+w,y+h);gr.addColorStop(0,'#F4F6F7');gr.addColorStop(.5,'#C7CDD2');gr.addColorStop(1,'#9AA2A9');
+  g.fillStyle='rgba(0,0,0,.2)';rr(g,x+3,y+6,w,h,20);g.fill();g.fillStyle=gr;rr(g,x,y,w,h,20);g.fill();
+  g.strokeStyle='#6B737A';g.lineWidth=2.5;g.setLineDash([3,5]);rr(g,x+7,y+7,w-14,h-14,14);g.stroke();g.setLineDash([]);
+  var o1={weight:700,size:30,track:.03};o1.size=fitText(g,l1,o1,w-44);
+  T(g,l1,x+w/2,y+h*.42,{weight:700,size:o1.size,color:'#2B3136',track:.03});T(g,'FREE*',x+w/2,y+h*.86,{weight:700,size:50,color:'#1F2428',track:.04});g.restore();
+}
+function headerOverlay(g,s,tp,t){
+  if(tp.ownHeader)return;
+  var wide=(tp.id==='lower'||tp.id==='caption'),light=!!tp.light&&!s._ctaOn,a=s._intro?1:ap(t,.4,.5);
+  if(s.showPolicy!==false)badgePolicy(g,s,light,50,wide?96:106,240,90,a);
+  if(s.showCoin!==false)coinHdr(g,s,HDR.coin.x,wide?142:HDR.coin.y,HDR.coin.r,a);
+  if(wide)return;
+  var la=s._intro?1:((tp.id==='topn'||tp.id==='sv_top')?ap(t,1.2,.5):ap(t,.1,.5));
+  logoH(g,540,100,300,light?C.pine:C.ch,la);
+  if(tp.silver)svHdrPill(g,s,HDR.mk.x,HDR.mk.y,s._intro?1:ap(t,.2,.5),light);else makingPill(g,s,HDR.mk.x,HDR.mk.y,s._intro?1:ap(t,.2,.5),light);
+}
+function ctaBlock(g,s,t,t0){
+  s._ctaOn=true;var a=ap(t,t0,.5);
+  T(g,'Design pasand aaya?',540,540+20*(1-ap(t,t0+.2,.5)),{fam:'c',weight:700,size:104,color:C.ch,alpha:ap(t,t0+.2,.5)});
+  T(g,'Order ke liye message karein.',540,610,{weight:500,size:46,color:C.iv,alpha:ap(t,t0+.4,.5)});
+  var p=ap(t,t0+.6,.5);g.save();g.globalAlpha=p;g.fillStyle=C.iv;rr(g,130,660,820,270,30);g.fill();g.strokeStyle=C.gold;g.lineWidth=2;rr(g,140,670,800,250,24);g.stroke();
+  var col=C.pine,ph=s.phone||'[PHONE NUMBER]',lc=s.location||'[SHOP LOCATION]',ot=ownerText(s);
+  phoneIcon(g,205,732,24,col);T(g,ph,255,748,{weight:700,size:48,color:col,align:'left'});
+  T(g,ot,255,810,{weight:600,size:fitText(g,ot,{weight:600,size:36},640),color:C.gt,align:'left'});
+  pinIcon(g,205,868,24,col);T(g,lc,255,880,{weight:600,size:fitText(g,lc,{weight:600,size:38},640),color:col,align:'left'});g.restore();
+  if(!s._silver)trustPill(g,540,968,C.iv,C.ch,C.pine,ap(t,t0+.9,.5));
+  T(g,'Roz naye design ke liye follow karein',540,1100,{weight:500,size:34,color:C.ch,alpha:ap(t,t0+1.1,.5)});
+  g.save();g.globalAlpha=ap(t,t0+1.2,.5);halo(g,540,1250,190,C.ch,4.5);T(g,'TPS',540,1432,{fam:'c',weight:700,size:92,color:C.ch,track:.14});T(g,'JEWELS',540,1480,{fam:'c',weight:700,size:28,color:C.ch,track:.6});g.restore();
+}
+function xv(s,k,d){return (s.x&&s.x[k]!=null&&s.x[k]!=='')?s.x[k]:d}
+function lines(txt){return String(txt||'').split('\n').map(function(x){return x.trim()}).filter(Boolean)}
+function sparkles(g,t,n,seed,yMin,yMax,col,A){
+  var r=seed;function rnd(){r=(r*9301+49297)%233280;return r/233280}
+  for(var i=0;i<n;i++){var x=60+rnd()*960,y=yMin+rnd()*(yMax-yMin),sz=6+rnd()*12,ph=rnd()*6.28,a=.25+.6*Math.max(0,Math.sin(t*2.2+ph));
+    g.save();g.globalAlpha=a*.8*(A==null?1:A);g.fillStyle=col||C.ch;g.translate(x,y);g.beginPath();g.moveTo(0,-sz);g.quadraticCurveTo(0,0,sz,0);g.quadraticCurveTo(0,0,0,sz);g.quadraticCurveTo(0,0,-sz,0);g.quadraticCurveTo(0,0,0,-sz);g.fill();g.restore();}
+}
+function diyaC(g,cx,cy,sc,t,ph,a){
+  g.save();g.globalAlpha=(a==null?1:a)*g.globalAlpha;var fl=1+.07*Math.sin(t*9+ph)+.03*Math.sin(t*14+ph*2);
+  var gl=g.createRadialGradient(cx,cy-60*sc,10,cx,cy-60*sc,170*sc);gl.addColorStop(0,'rgba(246,215,154,.55)');gl.addColorStop(1,'rgba(246,215,154,0)');g.fillStyle=gl;g.beginPath();g.arc(cx,cy-60*sc,170*sc,0,7);g.fill();
+  g.fillStyle='#C9A45C';g.beginPath();g.moveTo(cx-90*sc,cy);g.quadraticCurveTo(cx,cy+100*sc,cx+90*sc,cy);g.closePath();g.fill();
+  g.strokeStyle='#8A641F';g.lineWidth=3*sc;g.beginPath();g.moveTo(cx-90*sc,cy);g.quadraticCurveTo(cx,cy-20*sc,cx+90*sc,cy);g.stroke();
+  g.fillStyle='#C9A45C';g.beginPath();g.moveTo(cx+90*sc,cy);g.quadraticCurveTo(cx+135*sc,cy-8*sc,cx+150*sc,cy-30*sc);g.quadraticCurveTo(cx+130*sc,cy+25*sc,cx+84*sc,cy+30*sc);g.closePath();g.fill();
+  g.save();g.translate(cx,cy-6*sc);g.scale(fl,fl*(1+.05*Math.sin(t*11+ph)));
+  g.fillStyle='#F6C066';g.beginPath();g.moveTo(0,0);g.bezierCurveTo(-30*sc,-50*sc,-14*sc,-96*sc,0,-130*sc);g.bezierCurveTo(14*sc,-96*sc,30*sc,-50*sc,0,0);g.fill();
+  g.fillStyle='#FFF0C4';g.beginPath();g.moveTo(0,-6*sc);g.bezierCurveTo(-13*sc,-34*sc,-6*sc,-62*sc,0,-80*sc);g.bezierCurveTo(6*sc,-62*sc,13*sc,-34*sc,0,-6*sc);g.fill();g.restore();g.restore();
+}
+function drawFest(g,s,t){
+  bg(g,true,t);head(g,s,t,true);sparkles(g,t,34,7,380,1500);
+  var nm=xv(s,'festName','Shubh Dhanteras'),ls=wrapText(g,nm,880,{fam:'c',weight:700,size:112});
+  ls.slice(0,2).forEach(function(l,i){T(g,l,540,520+i*118+(1-ap(t,.3,.7))*30,{fam:'c',weight:700,size:112,color:C.ch,alpha:ap(t,.3,.7)})});
+  var y0=520+Math.min(ls.length,2)*118+30,ms=wrapText(g,xv(s,'festMsg','Aapke parivaar ko dhan, sukh aur samriddhi ki shubhkamnayein.'),840,{weight:500,size:42});
+  ms.slice(0,4).forEach(function(l,i){T(g,l,540,y0+i*58,{weight:500,size:42,color:C.iv,alpha:ap(t,1.0+i*.15,.6)})});
+  var da=ap(t,1.4,.8);diyaC(g,330,1290,1.15,t,0,da);diyaC(g,750,1290,1.15,t,2,da);diyaC(g,540,1190,1.5,t,1,da);
+  T(g,'TPS Jewels ki taraf se',540,1450,{fam:'c',style:'italic',weight:600,size:50,color:C.ch,alpha:ap(t,2.2,.6)});
+  T(g,s.location||'',540,1500,{weight:500,size:30,color:C.iv,alpha:.8*ap(t,2.4,.5)});
+}
+function daysTo(s,dstr){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(dstr||'');if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3]).getTime(),now=s.todayMs||(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime()})();return Math.round((d-now)/86400000)}
+function drawCount(g,s,t){
+  bg(g,true,t);head(g,s,t,true);sparkles(g,t,24,11,380,1500);
+  var nm=xv(s,'cdName','Dhanteras'),days=daysTo(s,xv(s,'cdDate','2026-11-06'));
+  T(g,nm+' mein',540,520,{fam:'c',weight:700,size:96,color:C.iv,alpha:ap(t,.2,.6)});
+  if(days===null){T(g,'Date galat hai (YYYY-MM-DD)',540,900,{weight:600,size:42,color:C.ch});return;}
+  if(days<0){T(g,'Ye din ho chuka hai.',540,900,{weight:600,size:50,color:C.ch});T(g,'Naya date daalein.',540,970,{weight:400,size:38,color:C.iv});return;}
+  var a=ap(t,.6,.8);
+  if(days===0){T(g,'Aaj hai!',540,1000,{fam:'c',weight:700,size:230,color:C.ch,alpha:a});}
+  else{var shown=Math.max(1,Math.round(days*ease((t-.7)/1.2)));T(g,String(shown),540,1030,{weight:700,size:330,color:C.ch,alpha:a});T(g,days===1?'din baaki':'din baaki',540,1130,{fam:'c',weight:700,size:84,color:C.iv,alpha:a});}
+  T(g,xv(s,'cdMsg','Advance booking shuru'),540,1260,{weight:600,size:46,color:C.ch,alpha:ap(t,1.8,.6)});
+  diyaC(g,250,1420,.7,t,0,ap(t,1.6,.7));diyaC(g,830,1420,.7,t,3,ap(t,1.6,.7));
+  footer(g,s,t,1540,true,2.4);
+}
+function drawNewDesign(g,s,t){
+  var c=calc(s);bg(g,true,t);head(g,s,t,true);
+  var pa=ap(t,.3,.5);g.save();g.globalAlpha=pa;g.fillStyle=C.ch;rr(g,380,360,320,56,28);g.fill();T(g,'NAYA DESIGN',540,398,{weight:700,size:30,color:C.pine,track:.14});g.restore();
+  mediaWin(g,s,100,445,880,690,t,.4,true);
+  var sh=((t-1.4)%3.2);if(sh>0&&sh<1.2&&t>1.4){g.save();rr(g,100,445,880,690,26);g.clip();var x=-200+sh/1.2*1300,gr=g.createLinearGradient(x,445,x+160,1135);gr.addColorStop(0,'rgba(255,255,255,0)');gr.addColorStop(.5,'rgba(255,255,255,.22)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(100,445,880,690);g.restore();}
+  T(g,s.design||'Aaj ka Design',540,1215,{fam:'c',weight:700,size:62,color:C.iv,alpha:ap(t,.9,.5)});
+  T(g,s.karat+'  |  '+s.weight+' gram  |  Hallmark Card Available',540,1262,{weight:500,size:30,color:C.ch,alpha:ap(t,1.1,.5)});
+  if(xv(s,'showPrice',true)!==false){var a=ap(t,1.5,.6);g.save();g.globalAlpha=a;g.fillStyle=C.iv;rr(g,160,1292,760,110,30);g.fill();T(g,'Total (aaj ke rate par, making '+(+s.making.toFixed(2))+'%*)',540,1332,{weight:600,size:26,color:C.gt});T(g,inr(count(c.total,t,1.7,1.2)),540,1387,{weight:700,size:60,color:C.pine});g.restore();}
+  footer(g,s,t,1560,true,2.6);
+}
+function drawHandover(g,s,t){
+  bg(g,true,t);head(g,s,t,true);sparkles(g,t,40,5,360,1500);
+  var a=ap(t,.2,.7);T(g,'Mubarak Ho!',540,470+(1-a)*40,{fam:'c',weight:700,size:Math.min(140,880/(11*.5)),color:C.ch,alpha:a});
+  mediaWin(g,s,110,520,860,570,t,.6,true);
+  T(g,xv(s,'custName','Priya ji'),540,1195,{fam:'c',weight:700,size:72,color:C.iv,alpha:ap(t,1.4,.5)});
+  T(g,xv(s,'custItem','Gold Chain Set')+' ke liye dher saari badhai',540,1250,{weight:500,size:34,color:C.ch,alpha:ap(t,1.6,.5)});
+  trustPill(g,540,1290,C.iv,C.ch,C.pine,ap(t,2.0,.5));
+  T(g,'(Customer ki anumati se)',540,1400,{weight:400,size:24,color:C.iv,alpha:.7*ap(t,2.3,.5)});
+  footer(g,s,t,1560,true,2.6);
+}
+function drawChecklist(g,s,t){
+  var items=lines(xv(s,'clText','Mangalsutra\nHaar / Necklace set\nJhumke\nKangan / Choodi\nMaang tikka\nPayal / Bichhiya')).slice(0,8);
+  bg(g,false,t);head(g,s,t,false);
+  var ttl=wrapText(g,xv(s,'clTitle','Dulhan ke gehne ki list'),880,{fam:'c',weight:700,size:78});
+  ttl.slice(0,2).forEach(function(l,i){T(g,l,540,450+i*84,{fam:'c',weight:700,size:78,color:C.pine,alpha:ap(t,.2,.5)})});
+  var y=ttl.length>1?620:560,ch=Math.min(112,(1400-y)/Math.max(items.length,1)-12);
+  items.forEach(function(it,i){var a=ap(t,1.0+i*1.0,.5),pr=cl((t-(1.4+i*1.0))/.5);g.save();g.globalAlpha=a;g.translate((1-a)*60,0);
+    g.fillStyle=C.pine;rr(g,90,y,900,ch,24);g.fill();g.strokeStyle=C.ch;g.lineWidth=3;g.beginPath();g.arc(165,y+ch/2,30,0,7);g.stroke();
+    if(pr>0){g.strokeStyle=C.ch;g.lineWidth=7;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(150,y+ch/2+2);var p1=Math.min(1,pr*2);g.lineTo(150+(163-150)*p1,y+ch/2+2+(14)*p1);if(pr>.5){var p2=(pr-.5)*2;g.lineTo(163+(185-163)*p2,y+ch/2+16-(32)*p2);}g.stroke();}
+    T(g,it,230,y+ch/2+14,{weight:600,size:42,color:C.iv,align:'left'});g.restore();y+=ch+12;});
+  T(g,'Save karein, shopping ke waqt kaam aayega',540,1470,{fam:'c',style:'italic',weight:600,size:44,color:C.gt,alpha:ap(t,1.4+items.length,.6)});
+  footer(g,s,t,1530,false,2+items.length);
+}
+function mythPairs(s){return lines(xv(s,'mythText','Hallmark sirf badi dukaan mein milta hai || Koi bhi BIS-registered jeweller hallmarked gold bech sakta hai. Hallmark card maangiye.\nGold ka rate har dukaan par alag hota hai || Rate market ke hisaab se chalta hai; farak aksar making charge mein hota hai. Bill par poora hisaab dekhiye.')).slice(0,3).map(function(l){var p=l.split('||');return {m:(p[0]||'').trim(),f:(p[1]||'').trim()}})}
+function mythTimes(s){var N=mythPairs(s).length||1;return {N:N,per:5.0,D:1.8+N*5.0+2.8}}
+function drawMyth(g,s,t){
+  var P=mythPairs(s),K=mythTimes(s);bg(g,false,t);head(g,s,t,false);
+  if(t<1.8){T(g,'Sach ya Jhooth?',540,1000,{fam:'c',weight:700,size:130,color:C.pine,alpha:ap(t,.2,.6)});return;}
+  if(t>=1.8+K.N*K.per){bg(g,true,t);ctaBlock(g,s,t,1.8+K.N*K.per);return;}
+  var k=Math.min(K.N-1,Math.floor((t-1.8)/K.per)),p=((t-1.8)-k*K.per)/K.per,pr=P[k];if(!pr){T(g,'Add a myth || fact line',540,900,{weight:600,size:44,color:C.pine});return;}
+  var a=ap(p,0,.08)*(p>.95?ease((1-p)/.05):1);g.save();g.globalAlpha=a;
+  T(g,'SACH YA JHOOTH?  #'+(k+1),540,440,{weight:700,size:34,color:C.gt,track:.12});
+  g.fillStyle=C.pine;rr(g,90,480,900,380,30);g.fill();var ml=wrapText(g,'\u201C'+pr.m+'\u201D',780,{fam:'c',weight:700,size:56});
+  ml.slice(0,5).forEach(function(l,i){T(g,l,540,560+i*66,{fam:'c',weight:700,size:56,color:C.iv})});
+  var sp=ease((p-.3)/.12);if(sp>0){g.save();g.translate(780,800);g.rotate(-.14);g.scale(.6+.4*sp,.6+.4*sp);g.globalAlpha=sp*a;g.strokeStyle=C.garn;g.lineWidth=8;rr(g,-140,-48,280,96,14);g.stroke();T(g,'JHOOTH',0,22,{weight:700,size:64,color:C.garn,track:.06});g.restore();}
+  var fa=ease((p-.5)/.15);g.globalAlpha=a*fa;g.translate(0,(1-fa)*40);g.fillStyle=C.iv;rr(g,90,900,900,430,30);g.fill();g.strokeStyle=C.gold;g.lineWidth=2.5;rr(g,102,912,876,406,22);g.stroke();
+  T(g,'SACH YE HAI',540,970,{weight:700,size:32,color:C.gt,track:.14});var fl=wrapText(g,pr.f,780,{weight:600,size:42});fl.slice(0,6).forEach(function(l,i){T(g,l,540,1040+i*58,{weight:600,size:42,color:C.pine})});
+  g.restore();
+}
+function drawPoll(g,s,t){
+  bg(g,true,t);head(g,s,t,true);
+  var q=wrapText(g,xv(s,'pollQ','Aapko kaunsa zyada pasand hai?'),860,{fam:'c',weight:700,size:84});
+  q.slice(0,3).forEach(function(l,i){T(g,l,540,470+i*92,{fam:'c',weight:700,size:84,color:C.ch,alpha:ap(t,.2,.6)})});
+  var y0=470+Math.min(q.length,3)*92+30;
+  [['A',xv(s,'pollA','Gold chain')],['B',xv(s,'pollB','Mangalsutra')]].forEach(function(o,i){var a=ap(t,1.0+i*.5,.6),y=y0+i*270;g.save();g.globalAlpha=a;g.translate((i?1:-1)*(1-a)*120,0);
+    g.fillStyle=C.iv;rr(g,100,y,880,230,30);g.fill();g.fillStyle=C.pine;g.beginPath();g.arc(215,y+115,64,0,7);g.fill();T(g,o[0],215,y+138,{weight:700,size:72,color:C.ch});
+    var ls=wrapText(g,o[1],560,{fam:'c',weight:700,size:62});ls.slice(0,2).forEach(function(l,j){T(g,l,310,y+(ls.length>1?100:128)+j*68,{fam:'c',weight:700,size:62,color:C.pine,align:'left'})});g.restore();});
+  T(g,'Comment mein A ya B likhiye',540,y0+590,{weight:700,size:46,color:C.iv,alpha:ap(t,2.4,.6)});
+  trustPill(g,540,y0+640,C.iv,C.ch,C.pine,ap(t,3.0,.5));
+  footer(g,s,t,1540,true,3.4);
+}
+function lastTwo(s){var h=(s.history||[]).slice();if(h.length<2)return null;return [h[h.length-2],h[h.length-1]]}
+function drawRateChange(g,s,t){
+  var two=lastTwo(s);bg(g,true,t);head(g,s,t,true);
+  T(g,'Gold Rate Update',540,470,{fam:'c',weight:700,size:98,color:C.ch,alpha:ap(t,.2,.6)});T(g,badge(g,s),540,530,{weight:500,size:34,color:C.iv,alpha:ap(t,.4,.5)});
+  if(!two){T(g,'Kal ka rate save nahi hai.',540,900,{weight:600,size:44,color:C.iv});T(g,'2 din ke rate confirm karein.',540,960,{weight:400,size:36,color:C.ch});return;}
+  var d22=two[1].r22-two[0].r22,up=d22>0,flat=d22===0,a=ap(t,.8,.6),col=flat?C.ch:(up?C.garn:C.ch);
+  g.save();g.globalAlpha=a;g.fillStyle=C.iv;rr(g,100,600,880,640,34);g.fill();
+  T(g,'22K Gold, per 10 gram',540,680,{weight:600,size:36,color:C.gt});T(g,inr(count(two[1].r22,t,1.0,1.0)),540,800,{weight:700,size:118,color:C.pine});
+  if(!flat){var as=ease((t-1.8)/.6),ay=up?1:-1;g.save();g.translate(280,985);g.scale(as,as);g.fillStyle=up?C.garn:C.pine;g.beginPath();g.moveTo(0,ay*-52);g.lineTo(58,ay*30);g.lineTo(22,ay*30);g.lineTo(22,ay*62);g.lineTo(-22,ay*62);g.lineTo(-22,ay*30);g.lineTo(-58,ay*30);g.closePath();g.fill();g.restore();}
+  T(g,flat?'Kal jitna hi':'Kal se '+inr(Math.abs(d22))+(up?' upar':' neeche'),flat?540:680,1000,{weight:700,size:flat?60:54,color:C.pine,alpha:ap(t,2.0,.5),align:flat?'center':'center'});
+  if(two[1].r20&&two[0].r20){var d20=two[1].r20-two[0].r20;T(g,'20K: '+inr(two[1].r20)+(d20===0?' (kal jitna)':'  ('+(d20>0?'+':'-')+inr(Math.abs(d20)).replace('\u20B9','\u20B9')+')'),540,1130,{weight:600,size:40,color:C.gt,alpha:ap(t,2.4,.5)});}
+  g.restore();
+  T(g,'Gold ka rate market ke hisaab se badalta rehta hai.',540,1320,{weight:500,size:30,color:C.iv,alpha:ap(t,2.8,.5)});
+  T(g,'Roz ka rate yahin: follow karein',540,1380,{fam:'c',style:'italic',weight:600,size:46,color:C.ch,alpha:ap(t,3.2,.5)});
+  footer(g,s,t,1500,true,3.6);
+}
+function drawCaptionClip(g,s,t){
+  bg(g,true,t);mediaWin(g,s,80,250,920,990,t,.2,true);logoH(g,540,120,360,C.ch,ap(t,.1,.5));heroBand(g,s,80,1265,920,120,ap(t,.9,.5),true);
+  var a=ap(t,.8,.6);g.save();g.globalAlpha=a;g.translate(0,(1-a)*60);g.fillStyle=C.pine;rr(g,80,1405,920,170,28);g.fill();g.strokeStyle=C.ch;g.lineWidth=2.5;rr(g,92,1417,896,146,20);g.stroke();g.restore();
+  [xv(s,'cap1','Dukaan ki ek jhalak'),xv(s,'cap2','Aaiye, apni aankhon se dekhiye'),xv(s,'cap3','Hallmark Card ke saath')].forEach(function(l,i){var la=ap(t,1.0+i*.9,.5);g.save();g.globalAlpha=la;g.translate(0,(1-la)*20);
+    var o=i===0?{fam:'c',weight:700,size:56,color:C.ch}:{weight:i===1?600:500,size:i===1?36:30,color:i===1?C.iv:C.ch};var sz=fitText(g,l,{weight:o.weight,size:o.size},840);o.size=sz;T(g,l,540,[1470,1512,1548][i],o);g.restore();});
+}
+/* ===== end EXTENSION 2 ===== */
+
+
+/* ===== SILVER RATE PAGE (page flip + big silver coin) ===== */
+var SILV_LEN=5.4,FLIP_LEN=1.2,XC2=null;
+function silverLen(tp,s){return (tp&&s&&s.silverFor&&s.silverFor[tp.id])?SILV_LEN:0}
+function baseDur(tp,s){if(cleanOn(tp,s))return cleanBase(tp,s);var dd=typeof tp.D==='function'?tp.D(s):tp.D;if(tp.hasOutro&&s&&s.closeOn===false)dd-=3.4;return dd}
+function arcTextBottom(g,txt,cx,cy,r,size,color,track){
+  g.save();g.font='700 '+size+'px '+FP;g.fillStyle=color;g.textAlign='center';g.textBaseline='alphabetic';
+  var ws=[],tot=0,i;for(i=0;i<txt.length;i++){var w=g.measureText(txt[i]).width;ws.push(w);tot+=w;}var tr=(track||0)*size;tot+=tr*(txt.length-1);
+  var pos=0;for(i=0;i<txt.length;i++){var mid=pos+ws[i]/2;pos+=ws[i]+tr;var th=Math.PI-(mid-tot/2)/r;
+    g.save();g.translate(cx+r*Math.sin(th),cy-r*Math.cos(th));g.rotate(th-Math.PI);g.fillText(txt[i],0,0);g.restore();}
+  g.restore();
+}
+function silverRateFace(g,r,s){
+  var k=r/100,ink='#2B3136',free=s.showCoin!==false;discBase(g,r,PAL_S);
+  g.strokeStyle=PAL_S.line;g.lineWidth=2*k;g.beginPath();g.arc(0,0,64*k,0,7);g.stroke();
+  g.fillStyle='rgba(255,255,255,.2)';g.beginPath();g.arc(0,0,63*k,0,7);g.fill();
+  arcText(g,free?'SILVER COIN FREE':'TPS JEWELS',0,0,68.7*k,0,12*k,ink,.16);
+  arcTextBottom(g,free?'WITH EVERY PURCHASE':'SILVER RATE',0,0,77.3*k,12*k,ink,.16);
+  star(g,-73*k,0,5*k,ink);star(g,73*k,0,5*k,ink);
+  var sr=+s.silverRate||0,pr=inr(sr),pg=sr/1000,pgs=(pg%1===0)?inr(pg):('\u20B9'+pg.toFixed(2));
+  T(g,'SILVER RATE',0,-36*k,{weight:700,size:10.5*k,color:ink,track:.1});T(g,'TODAY',0,-23*k,{weight:700,size:10.5*k,color:ink,track:.25});
+  T(g,pr,0,13*k,{weight:700,size:fitText(g,pr,{weight:700,size:19*k},112*k),color:'#161B1F'});
+  T(g,'per 1 kg',0,28*k,{weight:600,size:8.5*k,color:ink});T(g,pgs+' / gram',0,41*k,{weight:600,size:8.5*k,color:ink});
+}
+function silverPage(g,s,t){
+  var R=330,CY=860;bg(g,true,3);logoH(g,540,100,300,C.ch,1);
+  T(g,'Aaj ka Silver Rate',540,440,{fam:'c',weight:700,size:90,color:C.ch,alpha:ap(t,.1,.6)});
+  if(t>0){var cs=eob(t/.8),th=Math.PI*2*eio(t/2.4);emergeFx(g,540,CY,200,t/.9);
+    spinDisc(g,540,CY,R*cs,th,PAL_S,function(g,q){silverRateFace(g,q,s)},silverBack,{shadow:1});}
+  T(g,badge(g,s),540,CY+R+120,{weight:500,size:34,color:C.iv,alpha:ap(t,1.4,.5)});
+  footer(g,s,t,1540,true,1.6);
+}
+function pageTurn(g,src,p){
+  var ph=p*Math.PI/2,c=Math.cos(ph),sn=Math.sin(ph),SW=6,n=Math.ceil(W/SW),D0=2400,maxX=0,i;
+  for(i=0;i<n;i++){var sx=i*SW,z=sx*sn*.55,sc=D0/(D0-z),X=sx*c*sc,dh=H*sc,dw=SW*c*sc+1.5,dy=(H-dh)/2;
+    g.drawImage(src,sx,0,SW,H,X,dy,dw,dh);g.fillStyle='rgba(0,0,0,'+(.34*sn*(.25+.75*sx/W))+')';g.fillRect(X,dy,dw,dh);if(X+dw>maxX)maxX=X+dw;}
+  if(maxX<W){var sg=g.createLinearGradient(maxX,0,maxX+260,0);sg.addColorStop(0,'rgba(0,0,0,'+(.45*sn)+')');sg.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=sg;g.fillRect(maxX,0,260,H);
+    g.fillStyle='rgba(255,255,255,'+(.3*sn)+')';g.fillRect(maxX-3,0,3,H);}
+}
+function silverSeq(g,s,tp,ts,Db){
+  g.clearRect(0,0,W,H);TRUST=(s.trustText&&String(s.trustText).trim())||'Hallmark Card Available';
+  silverPage(g,s,ts-FLIP_LEN*.55);
+  if(ts<FLIP_LEN){if(!XC2)XC2=ENV.makeCanvas(W,H);var xg=XC2.getContext('2d');xg.save();renderReel(xg,s,tp,Db);xg.restore();pageTurn(g,XC2,eio(ts/FLIP_LEN));}
+}
+/* ===== end SILVER RATE PAGE ===== */
+var INTRO_LEN=5.5,XFADE=.5,XC=null;
+function introLen(tp,s){return (tp&&tp.id!=='coinrate'&&!tp.silver&&s&&s.introFor&&s.introFor[tp.id])?INTRO_LEN:0}
+/* ===== SILVER JEWELLERY REELS (no weight, no gold making charge, DM-for-price option) ===== */
+function svNum(v){var n=parseFloat(String(v==null?'':v).replace(/[^0-9.]/g,''));return isNaN(n)?0:n}
+function svItems(s){return (s.sitems||[]).filter(function(i){return i}).slice(0,12)}
+function svDM(s,p){return !!s.silverDM||!(p>0)}
+function dmLabel(s){return (s.dmText&&String(s.dmText).trim())||'DM for price'}
+function svDisc(s){return (s.disclaimerSilver&&String(s.disclaimerSilver).trim())||s.disclaimer}
+function svHdrPill(g,s,cx,cy,a,light){
+  var txt=(s.svTag&&String(s.svTag).trim())||'SILVER JEWELLERY',sz=fitText(g,txt,{weight:700,size:34,track:.1},430),w=tw(g,txt,{weight:700,size:sz,track:.1})+90,h=84;
+  g.save();g.globalAlpha=a*g.globalAlpha;var gr=g.createLinearGradient(cx-w/2,cy-h/2,cx+w/2,cy+h/2);gr.addColorStop(0,'#F4F6F7');gr.addColorStop(.5,'#C7CDD2');gr.addColorStop(1,'#9AA2A9');
+  g.fillStyle='rgba(0,0,0,.18)';rr(g,cx-w/2+3,cy-h/2+6,w,h,h/2);g.fill();g.fillStyle=gr;rr(g,cx-w/2,cy-h/2,w,h,h/2);g.fill();g.strokeStyle=light?C.pine:C.ch;g.lineWidth=2.5;rr(g,cx-w/2,cy-h/2,w,h,h/2);g.stroke();
+  T(g,txt,cx,cy+sz*.34,{weight:700,size:sz,color:'#1F2428',track:.1});g.restore();
+}
+function dmTag(g,s,cx,cy,sc,a,t,big){
+  if(a<=0)return;var txt=dmLabel(s),size=big?44:34,w=tw(g,txt,{weight:700,size:size})+(big?170:136),h=big?96:76,pulse=1+.025*Math.sin(t*4.5);
+  g.save();g.globalAlpha=a*g.globalAlpha;g.translate(cx,cy);g.scale(sc*pulse,sc*pulse);
+  g.fillStyle='rgba(0,0,0,.3)';rr(g,-w/2+4,-h/2+8,w,h,h/2);g.fill();
+  g.fillStyle=C.pine;rr(g,-w/2,-h/2,w,h,h/2);g.fill();g.strokeStyle=C.ch;g.lineWidth=3;rr(g,-w/2,-h/2,w,h,h/2);g.stroke();
+  var ix=-w/2+h*.66;g.fillStyle=C.ch;rr(g,ix-20,-17,40,30,9);g.fill();g.beginPath();g.moveTo(ix-10,12);g.lineTo(ix-18,24);g.lineTo(ix+4,12);g.closePath();g.fill();
+  g.fillStyle=C.pine;[-10,0,10].forEach(function(d){g.beginPath();g.arc(ix+d,-2,3.2,0,7);g.fill();});
+  T(g,txt,ix+36,size*.34,{weight:700,size:size,color:C.iv,align:'left'});g.restore();
+}
+function pricePill(g,cx,y,p,a,tt,onDark){
+  if(a<=0)return;g.save();g.globalAlpha=a*g.globalAlpha;g.fillStyle=onDark?C.iv:C.pine;rr(g,cx-230,y,460,112,30);g.fill();
+  T(g,'Price',cx,y+36,{weight:600,size:26,color:onDark?C.gt:C.ch,track:.12});T(g,inr(p*ease(tt)),cx,y+94,{weight:700,size:62,color:onDark?C.pine:C.ch});g.restore();
+}
+function svShimmer(g,x,y,w,h,t){
+  var sh=((t-1.4)%3.2);if(sh>0&&sh<1.2&&t>1.4){g.save();rr(g,x,y,w,h,26);g.clip();var sx=-200+sh/1.2*1300,gr=g.createLinearGradient(sx,y,sx+160,y+h);gr.addColorStop(0,'rgba(255,255,255,0)');gr.addColorStop(.5,'rgba(255,255,255,.22)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(x,y,w,h);g.restore();}
+}
+function drawSvNew(g,s,t){
+  bg(g,true,t);head(g,s,t,true);
+  var pa=ap(t,.3,.5);g.save();g.globalAlpha=pa;g.fillStyle=C.ch;rr(g,320,356,440,56,28);g.fill();T(g,'NAYA SILVER DESIGN',540,394,{weight:700,size:28,color:C.pine,track:.12});g.restore();
+  mediaWin(g,s,100,445,880,690,t,.4,true);svShimmer(g,100,445,880,690,t);
+  var p=svNum(xv(s,'svPrice','')),dm=svDM(s,p);
+  if(dm)dmTag(g,s,700,1075,eob((t-1.8)/.6),1,t,true);
+  T(g,xv(s,'svName','Silver Payal'),540,1215,{fam:'c',weight:700,size:64,color:C.iv,alpha:ap(t,.9,.5)});
+  T(g,xv(s,'svNote','Naya silver design aaya hai'),540,1262,{weight:500,size:32,color:C.ch,alpha:ap(t,1.1,.5)});
+  if(dm)T(g,'Price jaanne ke liye humein message karein',540,1330,{weight:500,size:30,color:C.iv,alpha:.9*ap(t,2.0,.5)});
+  else pricePill(g,540,1292,p,ap(t,1.5,.6),(t-1.7)/1.2,true);
+  footer(g,s,t,1560,true,2.6);
+}
+function svTopTimes(s){var N=svItems(s).length||1,per=s.svPer||2.2,tg0=1.2,tg1=tg0+N*.1+.5,tf0=tg1+.3,tfin=tf0+N*per,tcta=tfin+2.0;return {N:N,per:per,tg0:tg0,tg1:tg1,tf0:tf0,tfin:tfin,tcta:tcta,D:tcta+2.6}}
+function svSub(s){return (s.svShowBudget&&+s.svBudget>0)?'under '+inr(+s.svBudget):'Silver Jewellery'}
+function svCellTxt(s,it){var p=svNum(it.price);return svDM(s,p)?dmLabel(s):inr(p)}
+function drawSvTop(g,s,t){
+  var items=svItems(s),N=items.length,K=svTopTimes(s);s._active=-1;bg(g,true,t);
+  if(!N){T(g,'Add silver items below',540,900,{weight:600,size:44,color:C.ch});return;}
+  var ctaA=ap(t,K.tcta,.4);
+  fadeRun(g,ctaA,function(g){
+    var geo=gridGeom(N),order=[],i;for(i=0;i<N;i++)order.push(s.countdown===false?i:N-1-i);
+    var hp=ease((t-.8)/.7),ttl=s.svTitle||'Top Silver Picks',sz=Math.min(118,860/(ttl.length*.5)),size=lerp(sz,Math.min(66,sz),hp),y=lerp(860,418,hp);
+    logoH(g,540,480,560,C.ch,1-hp);
+    var ta=ap(t,.2,.5);T(g,ttl,540,y+(1-ta)*20,{fam:'c',weight:700,size:Math.min(sz,size),color:C.iv,alpha:ta});
+    T(g,svSub(s),540,y+lerp(70,50,hp),{weight:600,size:lerp(46,36,hp),color:C.ch,alpha:ap(t,.5,.5),track:.05});
+    var k=-1,p=0,fa=0,act=-1;
+    if(t>=K.tf0&&t<K.tfin){k=Math.floor((t-K.tf0)/K.per);p=((t-K.tf0)-k*K.per)/K.per;act=order[k];fa=p<.14?ease(p/.14):(p>.86?ease((1-p)/.14):1);}
+    s._active=act;
+    var doneCount=t>=K.tfin?N:(k<0?0:k+(p>.9?1:0)),doneSet={};for(i=0;i<doneCount;i++)doneSet[order[i]]=1;
+    var boxA=(1-fa);drawBox(g,geo,boxA*ap(t,K.tg0-.1,.4));
+    items.forEach(function(it,i){var c=geo.cells[i],ca=ap(t,K.tg0+i*.1,.4)*boxA;if(ca<=0)return;var sc=.85+.15*ap(t,K.tg0+i*.1,.4);
+      drawCell(g,c,ca,sc);
+      if(!(i===act&&fa>0)){g.save();g.globalAlpha=ca;var cx=c.x+c.w/2,cy=c.y+c.h/2;g.translate(cx,cy);g.scale(sc,sc);g.translate(-cx,-cy);cover(g,it.media,c.x+8,c.y+8,c.w-16,c.h-16,14,it.name);g.restore();
+        rankBadge(g,c.x+36,c.y+36,26,String(i+1),ca);if(doneSet[i])priceTag(g,c,svCellTxt(s,it),ca);}});
+    if(act>=0&&fa>0){
+      var it=items[act],c=geo.cells[act],F={x:110,y:490,w:860,h:560},r={x:lerp(c.x,F.x,fa),y:lerp(c.y,F.y,fa),w:lerp(c.w,F.w,fa),h:lerp(c.h,F.h,fa)};
+      g.save();g.globalAlpha=Math.min(1,fa*1.5);cover(g,it.media,r.x,r.y,r.w,r.h,26,it.name);g.strokeStyle=C.ch;g.lineWidth=3;rr(g,r.x-8,r.y-8,r.w+16,r.h+16,32);g.stroke();g.restore();
+      rankBadge(g,r.x+62,r.y+62,46,'#'+(act+1),fa);
+      var pa=ease((p-.14)/.18)*(p>.88?ease((1-p)/.12):1),pv=svNum(it.price),dm=svDM(s,pv);g.save();g.globalAlpha=pa;g.translate(0,(1-pa)*40);
+      T(g,it.name||('Design '+(act+1)),540,1135,{fam:'c',weight:700,size:62,color:C.iv});
+      if(dm)dmTag(g,s,540,1250,1,1,t,true);else pricePill(g,540,1190,pv,1,(p-.3)/.25,true);
+      g.restore();
+    }
+    if(t>=K.tfin){var sa=ap(t,K.tfin,.5)*(1-ctaA);T(g,s.silverDM?'Price ke liye humein DM karein':'Sab designs ke daam upar dikhaye hain',540,geo.by+geo.bh+80,{weight:600,size:38,color:C.iv,alpha:sa});}
+  });
+  if(t>=K.tcta)ctaBlock(g,s,t,K.tcta);
+}
+function svRevTimes(s){var N=Math.min(svItems(s).length||1,8),per=s.svPer2||4.4;return {N:N,per:per,t0:1.6,D:1.6+N*per+3.0}}
+function drawSvReveal(g,s,t){
+  var items=svItems(s).slice(0,8),K=svRevTimes(s);s._active=-1;var ttl=xv(s,'svRevTitle','Silver ka daam batao!');
+  bg(g,false,t);head(g,s,t,false);
+  T(g,ttl,540,445,{fam:'c',weight:700,size:Math.min(90,860/(ttl.length*.5)),color:C.pine,alpha:ap(t,.2,.5)});
+  if(!items.length){T(g,'Add silver items below',540,900,{weight:600,size:44,color:C.pine});return;}
+  if(t<K.t0){T(g,'Guess karein: kitne ka hoga?',540,1000,{fam:'c',style:'italic',weight:600,size:56,color:C.gt,alpha:ap(t,.6,.5)});return;}
+  if(t>=K.t0+K.N*K.per){bg(g,true,t);ctaBlock(g,s,t,K.t0+K.N*K.per);return;}
+  var k=Math.min(K.N-1,Math.floor((t-K.t0)/K.per)),p=((t-K.t0)-k*K.per)/K.per,it=items[k];s._active=k;var pv=svNum(it.price),dm=svDM(s,pv),a=ap(p,0,.08)*(p>.95?ease((1-p)/.05):1);
+  g.save();g.globalAlpha=a;cover(g,it.media,110,500,860,570,26,it.name);g.strokeStyle=C.gold;g.lineWidth=3;rr(g,102,492,876,586,32);g.stroke();
+  rankBadge(g,172,562,46,'#'+(k+1),1);
+  T(g,it.name||('Design '+(k+1)),540,1150,{fam:'c',weight:700,size:56,color:C.pine});
+  T(g,'Silver Jewellery',540,1196,{weight:500,size:30,color:C.gt});
+  if(p<.5){var cd=3-Math.floor(p/.5*3);T(g,'Price kya hoga?',540,1310,{weight:700,size:60,color:C.pine});
+    g.strokeStyle=C.pine;g.lineWidth=8;g.lineCap='round';g.beginPath();g.arc(540,1420,50,-Math.PI/2,-Math.PI/2+2*Math.PI*((p/.5)%(1/3))*3);g.stroke();T(g,String(Math.max(1,cd)),540,1440,{weight:700,size:56,color:C.pine});}
+  else{var rp=(p-.5)/.5;
+    if(dm){dmTag(g,s,540,1340,eob((rp-.05)/.35),1,t,true);T(g,'Message karke price poochiye',540,1450,{weight:600,size:34,color:C.gt,alpha:ease((rp-.4)/.3)});}
+    else{g.fillStyle=C.pine;rr(g,150,1260,780,200,30);g.fill();T(g,'Price',540,1318,{weight:600,size:30,color:C.ch,track:.12});T(g,inr(pv*ease(rp/.5)),540,1415,{weight:700,size:96,color:C.ch});}}
+  g.restore();
+}
+function drawSvVs(g,s,t){
+  var it=svItems(s).slice(0,2);s._active=-1;bg(g,true,t);var cA=ap(t,6.2,.4),ttl=xv(s,'svVsTitle','Aapka pick kaunsa?');
+  fadeRun(g,cA,function(g){head(g,s,t,true);
+    T(g,ttl,540,445,{fam:'c',weight:700,size:Math.min(84,860/(ttl.length*.5)),color:C.ch,alpha:ap(t,.2,.5)});
+    if(it.length<2){T(g,'Add 2 silver items below',540,900,{weight:600,size:44,color:C.ch});return;}
+    [0,1].forEach(function(i){var a=ap(t,.5+i*.3,.6),dx=(i?1:-1)*(1-a)*120,x=i?555:75,w=450,y=480,h=560,pv=svNum(it[i].price),dm=svDM(s,pv);
+      g.save();g.globalAlpha=a;g.translate(dx,0);cover(g,it[i].media,x,y,w,h,26,it[i].name);g.strokeStyle=C.ch;g.lineWidth=3;rr(g,x-8,y-8,w+16,h+16,32);g.stroke();
+      rankBadge(g,x+56,y+56,42,i?'B':'A',1);
+      g.fillStyle=C.iv;rr(g,x,y+h+30,w,270,24);g.fill();
+      T(g,it[i].name||('Design '+(i?'B':'A')),x+w/2,y+h+96,{fam:'c',weight:700,size:46,color:C.pine});
+      T(g,'Silver Jewellery',x+w/2,y+h+140,{weight:500,size:28,color:C.gt});
+      if(dm){var da=eob((t-1.6-i*.2)/.5);g.save();g.beginPath();g.rect(x-20,y+h+160,w+40,140);g.clip();dmTag(g,s,x+w/2,y+h+225,da,.82,t,false);g.restore();}
+      else{T(g,inr(count(pv,t,1.6,1.2)),x+w/2,y+h+245,{weight:700,size:62,color:C.pine});}
+      g.restore();});
+    var va=ap(t,1.0,.5);g.save();g.globalAlpha=va;g.fillStyle=C.ch;g.beginPath();g.arc(540,760,48,0,7);g.fill();T(g,'VS',540,778,{weight:700,size:44,color:C.pine});g.restore();
+    T(g,'Aapko kaunsa pasand? Comment mein A ya B likhiye',540,1450,{fam:'c',style:'italic',weight:600,size:46,color:C.iv,alpha:ap(t,3.2,.6)});
+    T(g,svDisc(s),540,1530,{weight:400,size:22,color:C.ch,alpha:.75*ap(t,3.8,.4)});
+  });
+  if(t>=6.2)ctaBlock(g,s,t,6.2);
+}
+function drawSvClip(g,s,t){
+  bg(g,true,t);head(g,s,t,true);
+  mediaWin(g,s,100,380,880,800,t,.3,true);svShimmer(g,100,380,880,800,t);
+  var p=svNum(xv(s,'svPrice','')),dm=svDM(s,p);
+  if(dm)dmTag(g,s,700,1130,eob((t-1.8)/.6),1,t,true);
+  var c1=xv(s,'cap1','Silver ki nayi jhalak'),c2=xv(s,'cap2','Roz ke liye, har mauke ke liye');
+  T(g,c1,540,1275,{fam:'c',weight:700,size:fitText(g,c1,{fam:'c',weight:700,size:66},860),color:C.ch,alpha:ap(t,.9,.5)});
+  T(g,c2,540,1330,{weight:500,size:fitText(g,c2,{weight:500,size:36},860),color:C.iv,alpha:ap(t,1.3,.5)});
+  if(!dm)pricePill(g,540,1360,p,ap(t,1.7,.6),(t-1.9)/1.2,true);
+  else T(g,'Price jaanne ke liye humein message karein',540,1400,{weight:500,size:30,color:C.iv,alpha:.9*ap(t,2.2,.5)});
+  footer(g,s,t,1565,true,2.8);
+}
+
+/* ===== SILVER FULL-SCREEN PRODUCT VIEWS ===== */
+function svChip(g,s,x,cy,a){var txt=(s.svTag&&String(s.svTag).trim())||'SILVER JEWELLERY',sz=fitText(g,txt,{weight:700,size:30,track:.1},600),w=tw(g,txt,{weight:700,size:sz,track:.1})+70;dglass(g,x,cy-38,w,76,38,a);g.save();g.globalAlpha=a*g.globalAlpha;T(g,txt,x+w/2,cy+sz*.34,{weight:700,size:sz,color:'#E6EAED',track:.1});g.restore();}
+function svTagPill(g,txt,x,cy,a){var sz=fitText(g,txt,{weight:700,size:34},700),w=tw(g,txt,{weight:700,size:sz})+70;dglass(g,x,cy-36,w,72,36,a);g.save();g.globalAlpha=a*g.globalAlpha;T(g,txt,x+w/2,cy+sz*.34,{weight:700,size:sz,color:C.iv});g.restore();}
+function svPriceGlass(g,cx,cy,p,a,tt){if(a<=0)return;dglass(g,cx-250,cy-52,500,104,32,a);g.save();g.globalAlpha=a*g.globalAlpha;T(g,'Price',cx-150,cy+16,{weight:600,size:28,color:C.ch,track:.1,align:'left'});T(g,inr(p*ease(tt)),cx+230,cy+24,{weight:700,size:58,color:C.iv,align:'right'});g.restore();}
+function dmLeft(g,s,x,cy,a,t){var w=tw(g,dmLabel(s),{weight:700,size:34})+136;dmTag(g,s,x+w/2,cy,1,a,t,false);}
+function svBottom(g,s,t,L,name,note,pv,dm,t0){
+  slot(g,t,L,t0,.94,function(g,al){dglass(g,60,1285,800,150,32,al);g.save();g.globalAlpha=al*g.globalAlpha;
+    T(g,name,100,1352,{fam:'c',weight:700,size:fitText(g,name,{fam:'c',weight:700,size:62},720),color:C.iv,align:'left'});
+    T(g,note,100,1402,{weight:500,size:fitText(g,note,{weight:500,size:30},720),color:C.ch,align:'left'});g.restore();});
+  slot(g,t,L,t0+.14,.94,function(g,al){if(dm)dmLeft(g,s,60,1500,al,t);else svPriceGlass(g,310,1500,pv,al,(t-(t0+.14)*L-.4)/1.1);});
+}
+function svTop2(g,s,t,L){
+  slot(g,t,L,.06,.94,function(g,al){svChip(g,s,60,270,al)});
+  if(s.showCoin!==false)slot(g,t,L,.12,.94,function(g,al){coinTag(g,s,60,385,al,t)});
+}
+function drawSvFull(g,s,t){
+  var L=vL(s);fullMedia(g,s,t,L);svTop2(g,s,t,L);
+  var pv=svNum(xv(s,'svPrice','')),dm=svDM(s,pv);
+  svBottom(g,s,t,L,xv(s,'svName','Silver Payal'),xv(s,'svNote','Naya silver design aaya hai'),pv,dm,.16);
+  vidOutro(g,s,t,L);
+}
+function drawSvFullTags(g,s,t){
+  var L=vL(s);fullMedia(g,s,t,L);svTop2(g,s,t,L);
+  var tags=[xv(s,'svTag1','Roz pehenne ke liye'),xv(s,'svTag2','Gift ke liye perfect'),xv(s,'svTag3','Halka aur sundar')];
+  tags.forEach(function(tx,i){if(!String(tx).trim())return;slot(g,t,L,.18+i*.09,.94,function(g,al){svTagPill(g,String(tx).trim(),60,1020+i*88,al)});});
+  var pv=svNum(xv(s,'svPrice','')),dm=svDM(s,pv);
+  svBottom(g,s,t,L,xv(s,'svName','Silver Payal'),xv(s,'svNote','Naya silver design aaya hai'),pv,dm,.42);
+  vidOutro(g,s,t,L);
+}
+function svSlide(s){var v=parseFloat(xv(s,'svSlide',2.6));return isNaN(v)?2.6:Math.max(1.5,Math.min(6,v))}
+function svShowLen(s){return (svItems(s).length||1)*svSlide(s)}
+function fullItem(g,m,pp,alpha,label){
+  if(alpha<=0)return;g.save();g.globalAlpha=alpha*g.globalAlpha;
+  if(m&&m.w&&m.h){var isV=m.el&&m.el.tagName==='VIDEO',z=isV?1:1+.06*cl(pp),sc=Math.max(W/m.w,H/m.h)*z,dw=m.w*sc,dh=m.h*sc;try{g.drawImage(m.el,(W-dw)/2,(H-dh)/2,dw,dh);}catch(e){}}
+  else{g.fillStyle=C.pl;g.fillRect(0,0,W,H);g.save();g.globalAlpha*=.3;halo(g,540,860,380,C.ch,4);g.restore();T(g,label||'FULL-SCREEN PHOTO / VIDEO',540,1120,{weight:500,size:34,color:C.ch,track:.08,alpha:.6});}
+  g.restore();
+}
+function drawSvShow(g,s,t){
+  var items=svItems(s),N=items.length,per=svSlide(s),L=svShowLen(s);s._active=-1;
+  if(!N){bg(g,true,t);T(g,'Add silver items below',540,900,{weight:600,size:44,color:C.ch});return;}
+  g.save();g.fillStyle='#000';g.fillRect(0,0,W,H);g.restore();
+  var off=(s.textOn===false),tt=Math.min(t,L-.001),k=Math.min(N-1,Math.floor(tt/per)),ts=tt-k*per,pp=ts/per,e=k>0?ease(ts/.35):ap(t,0,.5);
+  if(t<L)s._active=k;
+  if(k>0&&e<1)fullItem(g,items[k-1].media,1,1-e,items[k-1].name);
+  fullItem(g,items[k].media,pp,e,items[k].name);
+  if(!off){g.save();g.globalAlpha=ap(t,0,.8);var gt=g.createLinearGradient(0,0,0,460);gt.addColorStop(0,'rgba(12,38,34,.6)');gt.addColorStop(1,'rgba(12,38,34,0)');g.fillStyle=gt;g.fillRect(0,0,W,460);
+  var gb=g.createLinearGradient(0,1100,0,H);gb.addColorStop(0,'rgba(12,38,34,0)');gb.addColorStop(1,'rgba(12,38,34,.72)');g.fillStyle=gb;g.fillRect(0,1100,W,H-1100);g.restore();
+  var fo=1-ap(t,L,.4);
+  logoH(g,540,70,240,C.iv,ap(t,.2,.6)*fo);
+  if(fo>0){
+    var segW=(960-8*(N-1))/N;g.save();g.globalAlpha=fo;for(var i=0;i<N;i++){var fill=i<k?1:(i===k?cl(ts/per):0);g.fillStyle='rgba(246,239,226,.28)';rr(g,60+i*(segW+8),182,segW,8,4);g.fill();if(fill>0){g.fillStyle=C.iv;rr(g,60+i*(segW+8),182,Math.max(8,segW*fill),8,4);g.fill();}}g.restore();
+    g.save();g.globalAlpha=fo;svChip(g,s,60,270,ap(t,.1,.5));if(s.showCoin!==false)coinTag(g,s,60,385,ap(t,.3,.5),t);
+    var it=items[k],pv=svNum(it.price),dm=svDM(s,pv),ia=ap(ts,.12,.45)*(1-ap(ts,per-.3,.3));
+    if(ia>0){g.save();g.translate((1-ap(ts,.12,.45))*-70,0);
+      dglass(g,60,1285,800,150,32,ia);g.save();g.globalAlpha=ia*g.globalAlpha;
+      T(g,it.name||('Design '+(k+1)),100,1352,{fam:'c',weight:700,size:fitText(g,it.name||'Design',{fam:'c',weight:700,size:62},720),color:C.iv,align:'left'});
+      T(g,(k+1)+' / '+N+'   |   Silver Jewellery',100,1402,{weight:500,size:30,color:C.ch,align:'left'});g.restore();
+      if(dm)dmLeft(g,s,60,1500,ia,t);else svPriceGlass(g,310,1500,pv,ia,(ts-.5)/.9);
+      g.restore();}
+    g.restore();
+  }
+  }
+  vidOutro(g,s,t,L);
+}
+
+function cleanApplies(tp){return !!tp&&(tp.media===true||tp.id==='sv_full_show')}
+function cleanOn(tp,s){return cleanApplies(tp)&&!!s&&s.textOn===false}
+function cleanLen(s){var v=parseFloat(s.cleanLen);return isNaN(v)?10:Math.max(3,Math.min(60,v))}
+function cleanBase(tp,s){var L=(tp.id==='sv_full_show')?svShowLen(s):cleanLen(s);return L+(s.closeOn!==false?3.4:0)}
+function drawCleanMedia(g,s,t,L){s._active=-1;g.save();g.fillStyle='#000';g.fillRect(0,0,W,H);g.restore();fullItem(g,s.media,t/L,ap(t,0,.4),'YOUR PHOTO / CLIP');if(s.closeOn!==false)vidOutro(g,s,t,L);}
+function renderReel(g,s,tp,t){
+  g.clearRect(0,0,W,H);s._hdr=(tp.id!=='lower'&&tp.id!=='caption');s._ctaOn=false;s._silver=!!tp.silver;
+  TRUST=(s.trustText&&String(s.trustText).trim())||'Hallmark Card Available';
+  if(cleanOn(tp,s)){s._hdr=false;if(tp.id==='sv_full_show')tp.draw(g,s,Math.max(0,t));else drawCleanMedia(g,s,Math.max(0,t),cleanLen(s));return;}
+  tp.draw(g,s,Math.max(0,t));headerOverlay(g,s,tp,Math.max(0,t));
+}
+function drawFrame(g,s,tplId,t){
+  var tp=TEMPLATES.filter(function(x){return x.id===tplId})[0]||TEMPLATES[0],I=introLen(tp,s),SL=silverLen(tp,s),Db=baseDur(tp,s);
+  g.save();s._intro=I>0;
+  if(SL&&(t-I)>=Db){silverSeq(g,s,tp,(t-I)-Db,Db);}
+  else if(!I){renderReel(g,s,tp,t);}
+  else{
+    t=Math.max(0,t);
+    if(t<I+XFADE){
+      g.clearRect(0,0,W,H);TRUST=(s.trustText&&String(s.trustText).trim())||'Hallmark Card Available';
+      introLayer(g,s,t,{wide:(tp.id==='lower'||tp.id==='caption'),disc:true,TT:4.4,TD:1.0});
+    }
+    if(t<I){}
+    else if(t<I+XFADE){
+      if(!XC)XC=ENV.makeCanvas(W,H);var xg=XC.getContext('2d');xg.save();renderReel(xg,s,tp,t-I);xg.restore();
+      g.save();g.globalAlpha=ease((t-I)/XFADE);g.drawImage(XC,0,0);g.restore();
+    }else{renderReel(g,s,tp,t-I);}
+  }
+  g.restore();
+}
+root.TPSDraw={cleanApplies:cleanApplies,cleanOn:cleanOn,svItems:svItems,svNum:svNum,init:init,drawFrame:drawFrame,TEMPLATES:TEMPLATES,calc:calc,inr:inr,dur:dur,introLen:introLen,itemTotal:itemTotal,validItems:validItems,topNTimes:topNTimes,W:W,H:H,C:C};
+if(typeof module!=='undefined')module.exports=root.TPSDraw;
+})(typeof window!=='undefined'?window:globalThis);
+
+</script>
+<script>
+(function(){
+'use strict';
+var D=window.TPSDraw, cv=document.getElementById('cv'), g=cv.getContext('2d');
+D.init({makeCanvas:function(w,h){var c=document.createElement('canvas');c.width=w;c.height=h;return c;}});
+var KEY='tps_reel_v2',OLDDISC='*Terms & conditions apply. Final price as per bill.';
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function dateStr(){return new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+var DEFAULT_TIPS=['Hallmark card aur HUID zaroor dekhein','Bill par weight, purity aur making charge likha ho','Making charge poochhein aur compare karein','Exchange aur buy-back ki shart pehle jaan lein','Advance dene par receipt zaroor lein'];
+var S={ver:0,introFor:{},silverFor:{},silverRate:150000,textOn:true,closeOn:true,cleanLen:10,silverDM:true,dmText:'DM for price',svTag:'SILVER JEWELLERY',disclaimerSilver:'*T&C apply. Free silver coin as per store terms.',svTitle:'Top 6 Silver Payal',svShowBudget:false,svBudget:2000,svPer:2.2,svPer2:4.4,sitems:[{name:'Silver Payal',price:0},{name:'Silver Chain',price:0},{name:'Silver Bracelet',price:0},{name:'Silver Ring',price:0},{name:'Silver Anklet Set',price:0},{name:'Silver Pendant',price:0}],introTitle:'Aaj ka Offer',rate24:129160,rate22:118400,rate20:107600,trustText:'Hallmark Card Available',rateDate:'',karat:'22K',weight:12.4,making:7.49,gst:3,showGst:true,other:0,design:'Aaj ka Design',phone:'',owner:'',ownerLabel:'Owner',location:'',town:'',time:'',showTime:false,disclaimer:'*T&C apply. Final price as per bill. Free silver coin as per store terms.',showCoin:true,coinLabel:'SILVER COIN',coinDetail:'',showPolicy:true,policy1:'CASH ONLY',policy2:'NO UDHAR',policyNote:true,x:{},showLabel:false,chartWeights:'2,4,5,8,10,20',tpl:'coinrate',
+ collTitle:'Top 6 Chains',budget:50000,showBudget:true,countdown:true,per:2.3,per2:4.2,
+ items:[{name:'Rope Chain',weight:2.8,karat:'22K',other:0},{name:'Box Chain',weight:3.1,karat:'22K',other:0},{name:'Singapore Chain',weight:3.4,karat:'22K',other:0},{name:'Curb Chain',weight:3.0,karat:'20K',other:0},{name:'Figaro Chain',weight:3.6,karat:'22K',other:0},{name:'Wheat Chain',weight:2.6,karat:'20K',other:0}],
+ history:[],tipsText:DEFAULT_TIPS.join('\n'),tipsTitle:'Gold kharidne se pehle 5 baatein',quote:'Bahut accha design mila aur hisaab ekdum saaf tha.',quoteName:'Customer name, town'};
+try{var saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){for(var k in saved)if(k in S)S[k]=saved[k];if(S.disclaimer===OLDDISC)S.disclaimer='*T&C apply. Final price as per bill. Free silver coin as per store terms.';}}catch(e){}
+if(S.ver<4){var v0=S.ver;S.ver=4;S.rateDate='';if(v0<3){S.rate24=Math.round(S.rate22*24/22/10)*10;if(S.making===6.99)S.making=7.49;if(S.tpl==='rate')S.tpl='coinrate';}}
+function persist(){try{var c={};for(var k in S)c[k]=S[k];c.items=S.items.map(function(i){return {name:i.name,weight:i.weight,karat:i.karat,other:i.other}});c.sitems=(S.sitems||[]).map(function(i){return {name:i.name,price:i.price}});localStorage.setItem(KEY,JSON.stringify(c));}catch(e){}}
+var $=function(id){return document.getElementById(id)};
+var IS_IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function mkVideo(url,onload,keep){var v=document.createElement('video');v.muted=true;v.defaultMuted=true;v.loop=true;v.playsInline=true;v.setAttribute('muted','');v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');v.setAttribute('preload','auto');v.style.cssText='position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none';document.body.appendChild(v);v.src=url;
+  v.addEventListener('loadeddata',function(){var pr=v.play();if(pr&&pr.then){pr.then(function(){if(!keep){v.pause();try{v.currentTime=.05;}catch(e){}}}).catch(function(){})}onload(v);});return v;}
+function dropVideo(v){try{v.pause();}catch(e){}try{URL.revokeObjectURL(v.src);}catch(e){}if(v.parentNode)v.parentNode.removeChild(v);}
+var media=null,vid=null;
+var fields={cleanLen:'num',dmText:'str',svTag:'str',disclaimerSilver:'str',svTitle:'str',svBudget:'num',svPer:'num',svPer2:'num',silverRate:'num',introTitle:'str',rate24:'num',rate22:'num',rate20:'num',trustText:'str',karat:'str',weight:'num',making:'num',gst:'num',other:'num',design:'str',phone:'str',owner:'str',ownerLabel:'str',location:'str',town:'str',time:'str',disclaimer:'str',chartWeights:'str',collTitle:'str',budget:'num',per:'num',per2:'num',tipsText:'str',tipsTitle:'str',quote:'str',quoteName:'str',coinLabel:'str',coinDetail:'str',policy1:'str',policy2:'str'};
+var checks={textOn:1,closeOn:1,silverDM:1,svShowBudget:1,showGst:1,showTime:1,showLabel:1,showBudget:1,countdown:1,showCoin:1,showPolicy:1,policyNote:1};
+function status(m,bad){var el=$('status');el.textContent=m||'';el.className='status'+(bad?' bad':'')}
+function stale(){return S.rateDate!==today()&&!(tplObj().silver)}
+function tplObj(){return D.TEMPLATES.filter(function(t){return t.id===S.tpl})[0]||D.TEMPLATES[0]}
+function parseWeights(){var a=String(S.chartWeights).split(/[ ,]+/).map(parseFloat).filter(function(x){return x>0}).slice(0,6);return a.length?a:[2,4,5,8,10,20]}
+function state(){var s={};for(var k in S)s[k]=S[k];s.chartWeights=parseWeights();s.dateStr=dateStr();s.media=media;s.tips=String(S.tipsText||'').split('\n');s.items=S.items;s.sitems=S.sitems;s.x=S.x||{};var n=new Date();s.todayMs=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime();return s}
+function problems(){
+  if(tplObj().silver)return svProblems();
+  var tp=tplObj();if((tp.needs||'').indexOf('coll')<0)return [];var out=[],s=state();
+  if(S.showBudget&&S.budget>0&&(tp.id==='topn'||tp.id==='guess'||tp.id==='setb'||tp.id==='vs')&&tp.id!=='setb'){D.validItems(s,12).forEach(function(it){var t=D.itemTotal(s,it).total;if(t>S.budget)out.push((it.name||'Item')+' ('+D.inr(t)+')');});}
+  return out;
+}
+function updateBanner(){
+  var b=$('banner');
+  if(stale()){b.hidden=false;b.textContent=S.rateDate?('Rates were last confirmed on '+S.rateDate+'. Type today\u2019s rates, then tap "Rates are for today".'):'These are EXAMPLE numbers. Type today\u2019s 24K, 22K, 20K and silver rates, then tap "Rates are for today".';$('confirmRates').hidden=false;}
+  else{b.hidden=true;$('confirmRates').hidden=true;}
+  $('save').disabled=$('rec').disabled=stale();
+}
+function updIntroRows(){$('introTitleRow').hidden=!(S.tpl==='coinrate'||$('introOn').checked);}
+function applyNeeds(){
+  var tp=tplObj(),needs=tp.needs||'';
+  Array.prototype.forEach.call(document.querySelectorAll('[data-needs]'),function(el){var want=el.dataset.needs.split(' '),show=want.some(function(w){return needs.split(' ').indexOf(w)>=0});el.hidden=!show;});
+  $('mediaSec').hidden=!(tp.media===true&&needs.indexOf('items')<0);
+  $('priceSec').hidden=!tp.price;$('extraSec').hidden=!(tp.fields&&tp.fields.length);renderFields();
+  var ca_=D.cleanApplies(tp);$('cleanSec').hidden=!ca_;$('cleanLenRow').hidden=!(ca_&&S.textOn===false&&tp.id!=='sv_full_show');var tt_=$('txtToggle');if(tt_){tt_.hidden=!ca_;tt_.textContent='Text boxes: '+(S.textOn===false?'OFF':'ON');}
+  $('perRow').hidden=(tp.id!=='topn');$('per2Row').hidden=(tp.id!=='guess');
+  $('budgetNote').hidden=!(needs.indexOf('coll')>=0);
+  $('introSub').hidden=(tp.id==='coinrate'||!!tp.silver);$('introOn').checked=!!(S.introFor&&S.introFor[S.tpl]);$('silverOn').checked=!!(S.silverFor&&S.silverFor[S.tpl]);updIntroRows();updateBanner();var tw_=$('svTopOnly');if(tw_)tw_.hidden=(tp.id!=='sv_top');var p1=$('svPerRow');if(p1)p1.hidden=(tp.id!=='sv_top');var p2=$('svPer2Row');if(p2)p2.hidden=(tp.id!=='sv_reveal');
+}
+function ensureDefaults(){S.x=S.x||{};D.TEMPLATES.forEach(function(t){(t.fields||[]).forEach(function(f){if(S.x[f.k]===undefined)S.x[f.k]=(f.d!==undefined?f.d:'');});});}
+function renderFields(){
+  var tp=tplObj(),box=$('extraFields');box.innerHTML='';if(!(tp.fields&&tp.fields.length))return;
+  tp.fields.forEach(function(f){var wrap=document.createElement('div');wrap.style.marginBottom='10px';
+    if(f.t==='chk'){wrap.className='chk';var c=document.createElement('input');c.type='checkbox';c.id='x_'+f.k;c.checked=!!S.x[f.k];var l=document.createElement('label');l.htmlFor=c.id;l.textContent=f.l;wrap.appendChild(c);wrap.appendChild(l);c.addEventListener('change',function(){S.x[f.k]=c.checked;persist();});}
+    else{var l2=document.createElement('label');l2.textContent=f.l;var inp=document.createElement(f.t==='ta'?'textarea':'input');if(f.t!=='ta')inp.type='text';inp.value=S.x[f.k];if(f.t==='ta')inp.style.minHeight='96px';wrap.appendChild(l2);wrap.appendChild(inp);inp.addEventListener('input',function(){S.x[f.k]=inp.value;persist();caption();lenInfo();});}
+    box.appendChild(wrap);});
+}
+function histText(){return S.history.map(function(h){return h.d+','+h.r22+(h.r20?','+h.r20:'')}).join('\n')}
+function parseHist(txt){return txt.split('\n').map(function(l){var p=l.trim().split(/[ ,]+/);if(p.length<2)return null;var r22=parseFloat(p[1]);if(!/^\d{4}-\d{2}-\d{2}$/.test(p[0])||!(r22>0))return null;var o={d:p[0],r22:r22};var r20=parseFloat(p[2]);if(r20>0)o.r20=r20;return o}).filter(Boolean).sort(function(a,b){return a.d<b.d?-1:1}).slice(-30)}
+function bind(){
+  ensureDefaults();
+  Object.keys(fields).forEach(function(id){var el=$(id);if(!el)return;el.value=S[id];el.addEventListener('input',function(){
+    S[id]=fields[id]==='num'?(parseFloat(el.value)||0):el.value;if(id==='rate24'||id==='rate22'||id==='rate20'||id==='silverRate')S.rateDate='';persist();updateBanner();itemTotals();restartIfCollection(id);});});
+  Object.keys(checks).forEach(function(id){var el=$(id);el.checked=!!S[id];el.addEventListener('change',function(){S[id]=el.checked;persist();itemTotals();});});
+  $('introOn').addEventListener('change',function(){S.introFor=S.introFor||{};S.introFor[S.tpl]=$('introOn').checked;persist();updIntroRows();lenInfo();restart();});
+  function setAllIntro(v){S.introFor={};if(v)D.TEMPLATES.forEach(function(t){if(t.id!=='coinrate')S.introFor[t.id]=true;});persist();$('introOn').checked=!!S.introFor[S.tpl];updIntroRows();lenInfo();restart();status(v?'Intro ticked for all reels.':'Intro unticked for all reels.');}
+  $('silverOn').addEventListener('change',function(){S.silverFor=S.silverFor||{};S.silverFor[S.tpl]=$('silverOn').checked;persist();lenInfo();restart();});
+  function setAllSilver(v){S.silverFor={};if(v)D.TEMPLATES.forEach(function(t){S.silverFor[t.id]=true;});persist();$('silverOn').checked=!!S.silverFor[S.tpl];lenInfo();restart();status(v?'Silver coin page ticked for all reels.':'Silver coin page unticked for all reels.');}
+  $('silverAllOn').addEventListener('click',function(){setAllSilver(true)});$('silverAllOff').addEventListener('click',function(){setAllSilver(false)});
+  $('introAllOn').addEventListener('click',function(){setAllIntro(true)});$('introAllOff').addEventListener('click',function(){setAllIntro(false)});
+  $('histText').value=histText();$('histText').addEventListener('input',function(){S.history=parseHist($('histText').value);persist();});
+  $('policyPreset').addEventListener('change',function(e){var v=e.target.value.split('|');if(v.length===2){S.policy1=v[0];S.policy2=v[1];$('policy1').value=v[0];$('policy2').value=v[1];persist();caption();}});
+  $('confirmRates').addEventListener('click',function(){S.rateDate=today();var h=S.history.filter(function(x){return x.d!==today()});h.push({d:today(),r22:S.rate22,r20:S.rate20});S.history=h.sort(function(a,b){return a.d<b.d?-1:1}).slice(-30);$('histText').value=histText();persist();updateBanner();status('Rates confirmed for today and added to your rate history.');});
+  $('auto24').addEventListener('click',function(){S.rate24=Math.round(S.rate22*24/22/10)*10;$('rate24').value=S.rate24;S.rateDate='';persist();updateBanner();status('24K filled as 22K x 24/22. Check it against your own 24K rate.');});
+  $('auto20').addEventListener('click',function(){S.rate20=Math.round(S.rate22*20/22/10)*10;$('rate20').value=S.rate20;S.rateDate='';persist();updateBanner();status('20K filled as 22K x 20/22. Check it against your own 20K rate.');});
+  var tl=$('tpls'),groups={silver:'Silver jewellery reels (no weight, no gold making charge, DM for price option)',price:'Price and rate reels',coll:'Collection reels (multiple items)',grow:'Growth reels',vid:'Full-video reels (design video first, our details fade in)',daily:'Regular post reels (festival, trust, engagement)'},lastG='';
+  D.TEMPLATES.forEach(function(t){if(t.group!==lastG){var h=document.createElement('div');h.className='gh';h.textContent=groups[t.group];tl.appendChild(h);lastG=t.group;}
+    var b=document.createElement('button');b.type='button';b.textContent=t.name;b.dataset.id=t.id;b.addEventListener('click',function(){S.tpl=t.id;persist();mark();applyNeeds();restart();caption();});tl.appendChild(b);});
+  mark();applyNeeds();
+  $('file').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(f)loadMedia(f);});
+  $('clear').addEventListener('click',function(){clearMedia();$('file').value='';});
+  $('play').addEventListener('click',function(){playing=!playing;$('play').textContent=playing?'Pause preview':'Play preview';if(playing)restart();});
+  $('save').addEventListener('click',savePng);$('rec').addEventListener('click',startRec);
+  $('addSItem').addEventListener('click',function(){if(S.sitems.length>=12){status('Up to 12 items.',true);return;}S.sitems.push({name:'New silver design',price:0});persist();renderSItems();});
+  $('sbulk').addEventListener('change',function(e){var fs=Array.prototype.slice.call(e.target.files||[]);fs.forEach(function(f){if(S.sitems.length>=12)return;var nm=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase()});var it={name:nm,price:0};S.sitems.push(it);loadItemMedia(it,f);});persist();renderSItems();e.target.value='';});
+  $('sortSAsc').addEventListener('click',function(){sortSItems(1)});$('sortSDesc').addEventListener('click',function(){sortSItems(-1)});
+  $('addItem').addEventListener('click',function(){if(S.items.length>=12){status('Up to 12 items.',true);return;}S.items.push({name:'New design',weight:3,karat:'22K',other:0});persist();renderItems();});
+  $('bulk').addEventListener('change',function(e){var fs=Array.prototype.slice.call(e.target.files||[]);fs.forEach(function(f){if(S.items.length>=12)return;var nm=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase()});var it={name:nm,weight:3,karat:'22K',other:0};S.items.push(it);loadItemMedia(it,f);});persist();renderItems();e.target.value='';});
+  $('sortAsc').addEventListener('click',function(){sortItems(1)});$('sortDesc').addEventListener('click',function(){sortItems(-1)});
+  $('caption').addEventListener('input',function(){});$('copyCap').addEventListener('click',copyCaption);
+  renderItems();renderSItems();updateBanner();caption();
+}
+function svNumA(v){var n=parseFloat(String(v==null?'':v).replace(/[^0-9.]/g,''));return isNaN(n)?0:n}
+function renderSItems(){
+  var box=$('sitems');if(!box)return;box.innerHTML='';
+  S.sitems.forEach(function(it,i){
+    var d=document.createElement('div');d.className='item';
+    d.innerHTML='<div class="ih"><strong>#'+(i+1)+'</strong><button type="button" class="link rm">Remove</button></div>'+
+      '<div class="row"><div><label>Name</label><input class="f-name" type="text"></div><div><label>Price in \u20B9 (used only when "DM for price" is unticked)</label><input class="f-p" type="number" inputmode="numeric" placeholder="e.g. 1499"></div></div>'+
+      '<div class="mrow"><label class="fbtn">Add photo/clip<input type="file" accept="image/*,video/*" class="f-m vh"></label><span class="small mname"></span></div>';
+    box.appendChild(d);
+    var q=function(c){return d.querySelector(c)};q('.f-name').value=it.name||'';q('.f-p').value=it.price>0?it.price:'';q('.mname').textContent=it.mediaName?('Loaded: '+it.mediaName):'No photo yet (placeholder shown)';
+    q('.f-name').addEventListener('input',function(e){it.name=e.target.value;persist();});
+    q('.f-p').addEventListener('input',function(e){it.price=svNumA(e.target.value);persist();caption();});
+    q('.f-m').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(f){loadItemMedia(it,f);q('.mname').textContent='Loaded: '+f.name;}});
+    q('.rm').addEventListener('click',function(){S.sitems.splice(i,1);persist();renderSItems();});
+  });
+}
+function sortSItems(dir){S.sitems.sort(function(a,b){return dir*((svNumA(a.price))-(svNumA(b.price)))});persist();renderSItems();status(dir>0?'Sorted by price, low to high.':'Sorted by price, high to low.');}
+function svProblems(){
+  var tp=tplObj();if(!tp.silver||tp.id!=='sv_top'||!S.svShowBudget||!(S.svBudget>0))return [];
+  var out=[];S.sitems.forEach(function(it){var p=svNumA(it.price);if(!(p>0))out.push((it.name||'Item')+' (no price)');else if(p>S.svBudget)out.push((it.name||'Item')+' ('+D.inr(p)+')');});return out;
+}
+function captionSilver(){
+  var tp=tplObj(),L=[],items=S.sitems.filter(function(i){return i&&(i.name||i.price)}).slice(0,9),dm=!!S.silverDM,xx=S.x||{},hook='';
+  var HK={sv_full:['Silver ka naya design, full screen mein dekhiye','Roz pehenne ke liye'],sv_full_tags:['Silver ka naya design, full screen mein dekhiye','Gift ke liye perfect'],sv_full_show:['Silver collection, ek ek design dekhiye','Aapko kaunsa pasand aaya?'],sv_new:['Naya silver design aaya hai, dekhiye','Silver ki nayi jhalak'],sv_top:['Top silver picks, aapka favourite kaunsa?','Number comment karein'],sv_reveal:['Daam batao! Guess karke dekhiye','Kya hai iska price?'],sv_vs:['A ya B? Comment mein batayiye','Aap kaunsa lenge?'],sv_clip:['Silver ki nayi jhalak','Roz ke liye, har mauke ke liye']};
+  if(S.tpl==='sv_new'||S.tpl==='sv_full'||S.tpl==='sv_full_tags'){var p=svNumA(xx.svPrice);hook=(xx.svName||'Naya silver design')+(dm||!(p>0)?'. Price ke liye DM karein':' ('+D.inr(p)+')');}
+  else if(S.tpl==='sv_top')hook=(S.svTitle||'Top silver picks')+(S.svShowBudget&&S.svBudget>0?' under '+D.inr(S.svBudget):'')+'. Aapka favourite kaunsa? Number comment karein';
+  else if(S.tpl==='sv_reveal')hook='Daam batao! Reel ke end mein jawab milega';
+  else if(S.tpl==='sv_vs')hook='A ya B? Comment mein batayiye';
+  else if(S.tpl==='sv_full_show')hook=(S.svTitle||'Silver collection')+'. Aapko kaunsa pasand aaya? Number comment karein';
+  else hook=xx.cap1||'Silver ki nayi jhalak';
+  L.push(hook+' \u2728','');
+  if(['sv_top','sv_reveal','sv_vs','sv_full_show'].indexOf(S.tpl)>=0&&items.length){
+    if(dm)L.push('Price ke liye humein DM karein.');
+    else items.forEach(function(it,i){var p=svNumA(it.price);L.push((i+1)+'. '+(it.name||'Design')+(p>0?': '+D.inr(p):''));});
+    L.push('');
+  }
+  if(S.showCoin!==false)L.push('\uD83C\uDF81 Har khareed par Silver Coin FREE*'+(S.coinDetail?' ('+S.coinDetail+')':''));
+  if(S.showPolicy!==false){L.push('Payment: '+S.policy1+' | '+S.policy2);if(S.policyNote)L.push('Bade bill par bank transfer/UPI/cheque; \u20B92 lakh se upar PAN zaroori.');}
+  L.push(S.disclaimerSilver||S.disclaimer);
+  L.push('','Design pasand aaya? DM ya WhatsApp karein'+(S.phone?': '+S.phone:'')+(S.owner?' ('+(S.ownerLabel||'Owner')+': '+S.owner+')':'')+'.');
+  if(S.location)L.push('\uD83D\uDCCD '+S.location);
+  var town=(S.town||'').replace(/[^A-Za-z0-9]/g,'').toLowerCase();
+  L.push('','Silver jewellery'+(S.town?' in '+S.town:'')+': payal, chains, bracelets, rings, gifts.');
+  var tags=['#silverjewellery','#silverpayal','#silvergifts','#indianjewellery'];tags.push(town?'#'+town+'jewellers':'#giftideas');L.push(tags.join(' '));
+  $('caption').value=L.join('\n');
+  var h=$('hooks');h.innerHTML='';(HK[S.tpl]||[]).forEach(function(x){var li=document.createElement('li');li.textContent=x;h.appendChild(li);});
+  lenInfo();
+}
+
+function sortItems(dir){var s=state();S.items.sort(function(a,b){return dir*(D.itemTotal(s,a).total-D.itemTotal(s,b).total)});persist();renderItems();status(dir>0?'Sorted low to high. Item 1 is the cheapest.':'Sorted high to low. Item 1 is the most expensive.');}
+function renderItems(){
+  var box=$('items');box.innerHTML='';
+  S.items.forEach(function(it,i){
+    var d=document.createElement('div');d.className='item';
+    d.innerHTML='<div class="ih"><strong>#'+(i+1)+'</strong><span class="itot" id="it'+i+'"></span><button type="button" class="link rm">Remove</button></div>'+
+      '<div class="row"><div><label>Name</label><input class="f-name" type="text"></div><div><label>Weight (g)</label><input class="f-w" type="number" step="0.01" inputmode="decimal"></div>'+
+      '<div><label>Purity</label><select class="f-k"><option>24K</option><option>22K</option><option>20K</option></select></div><div><label>Stone/other \u20B9</label><input class="f-o" type="number" inputmode="numeric"></div></div>'+
+      '<div class="mrow"><label class="fbtn">Add photo/clip<input type="file" accept="image/*,video/*" class="f-m vh"></label><span class="small mname"></span></div>';
+    box.appendChild(d);
+    var q=function(c){return d.querySelector(c)};q('.f-name').value=it.name;q('.f-w').value=it.weight;q('.f-k').value=it.karat||'22K';q('.f-o').value=it.other||0;q('.mname').textContent=it.mediaName?('Loaded: '+it.mediaName):'No photo yet (placeholder shown)';
+    q('.f-name').addEventListener('input',function(e){it.name=e.target.value;persist();});
+    q('.f-w').addEventListener('input',function(e){it.weight=parseFloat(e.target.value)||0;persist();itemTotals();});
+    q('.f-k').addEventListener('change',function(e){it.karat=e.target.value;persist();itemTotals();});
+    q('.f-o').addEventListener('input',function(e){it.other=parseFloat(e.target.value)||0;persist();itemTotals();});
+    q('.f-m').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(f){loadItemMedia(it,f);q('.mname').textContent='Loaded: '+f.name;}});
+    q('.rm').addEventListener('click',function(){S.items.splice(i,1);persist();renderItems();});
+  });
+  itemTotals();
+}
+function itemTotals(){
+  var s=state();S.items.forEach(function(it,i){var el=$('it'+i);if(!el)return;var t=D.itemTotal(s,it).total;el.textContent=D.inr(t);el.className='itot'+((S.showBudget&&S.budget>0&&t>S.budget&&(tplObj().needs||'').indexOf('coll')>=0)?' over':'');});
+  var p=problems(),w=$('budgetWarn');if(p.length){w.hidden=false;w.textContent='These items cost more than your budget line ('+D.inr(S.budget)+'): '+p.join(', ')+'. Remove them, change the budget, or untick "Show under-budget line". Saving is blocked until this is fixed.';}else w.hidden=true;
+}
+function loadItemMedia(it,f){
+  it.mediaName=f.name;it.media=null;var url=URL.createObjectURL(f);
+  if(f.type.indexOf('video')===0){mkVideo(url,function(v){it.media={el:v,w:v.videoWidth,h:v.videoHeight,isVideo:true};},false);}
+  else{var im=new Image();im.onload=function(){it.media={el:im,w:im.naturalWidth,h:im.naturalHeight};};im.src=url;}
+}
+function clearMedia(){if(vid){dropVideo(vid);}vid=null;media=null;$('mediaInfo').textContent='No clip loaded: the window shows black space.';}
+function loadMedia(f){clearMedia();var url=URL.createObjectURL(f);
+  if(f.type.indexOf('video')===0){vid=mkVideo(url,function(v){media={el:v,w:v.videoWidth,h:v.videoHeight};$('mediaInfo').textContent='Clip loaded: '+f.name;},true);}
+  else{var im=new Image();im.onload=function(){media={el:im,w:im.naturalWidth,h:im.naturalHeight};$('mediaInfo').textContent='Photo loaded: '+f.name;};im.src=url;}}
+function mark(){Array.prototype.forEach.call($('tpls').querySelectorAll('button'),function(b){b.className=(b.dataset.id===S.tpl)?'on':''});}
+// caption helper
+var HOOKS={coinrate:['Free silver coin + flat making charge, aur aaj ka gold rate','Aaj ka gold rate: 24K, 22K, 20K'],fest:['Shubhkamnayein, TPS Jewels ki taraf se','Tyohaar mubarak!'],count:['Tyohaar mein kitne din baaki?','Booking ka time aa gaya'],newd:['Naya design aaya hai, dekhiye','Aaj ka naya design'],handover:['Mubarak ho! Naye gehne ki khushi','Hamare customer ka khushi ka pal'],checklist:['Dulhan ke gehne ki list, save kar lijiye','Shaadi ki shopping se pehle ye list dekhiye'],myth:['Sach ya jhooth? Gold ke baare mein','Gold khareedne ke myths'],poll:['Aapka pick kaunsa? A ya B','Aaj ka sawaal'],ratechange:['Aaj gold rate badla?','Kal se aaj ka gold rate'],caption:['Dukaan ki ek jhalak','Aaiye, apni aankhon se dekhiye'],rate:['Aaj ka gold rate, ek nazar mein','24K, 22K aur 20K ka bhaav, roz yahin','Sone ka rate jaan lijiye, phir kharidiye'],ratemedia:['Aaj ka rate + aaj ka design','Naya design, aaj ka rate'],breakdown:['Is design ka poora hisaab dekhiye','Kitne ka padega? Ye raha hisaab'],total:['Total kitna? Reveal dekhiye','Is design ka final daam'],chart:['Kitne gram ka kitna paisa?','Weight-wise price chart, aaj ke rate par'],explain:['Gold ka price kaise banta hai?','3 step mein samjhiye'],topn:['Top picks, aaj ke rate par','Aapka favourite kaunsa? Number comment karein','Sabka daam saath mein dekhiye'],vs:['A ya B? Comment karein','Aap kaunsa lenge?'],guess:['Daam batao! Sahi guess = shabaash','Guess karo: total kitna?'],setb:['Poore set ka hisaab dekhiye','Ek ek item ka daam, aur total'],hist:['Pichhle 7 din ka gold rate','Rate upar gaya ya neeche?'],tips:['Gold kharidne se pehle ye zaroor dekhein','Save kar lijiye, kaam aayega'],testi:['Hamare customer ki baat','Customer ka experience']};
+function caption(){
+  if(tplObj().silver){captionSilver();return;}
+  var s=state(),tp=tplObj(),t=D.TEMPLATES.filter(function(x){return x.id===S.tpl})[0],c=D.calc(s),items=D.validItems(s,12),L=[];
+  var hook=(HOOKS[S.tpl]||[''])[0];
+  if(S.tpl==='breakdown'||S.tpl==='total')hook=(S.design||'Ye design')+': '+S.weight+' g '+S.karat+' ka total '+D.inr(c.total);
+  if(S.tpl.indexOf('vid')===0)hook=(S.design||'Naya design')+': '+S.weight+' g '+S.karat+' ka total '+D.inr(c.total);
+  if(S.tpl==='topn')hook=S.collTitle+(S.showBudget&&S.budget>0?' '+'under '+D.inr(S.budget):'')+'. Aapka favourite kaunsa? Number comment karein';
+  if(S.tpl==='fest')hook=(S.x.festName||'Shubhkamnayein')+' ke avsar par TPS Jewels ki taraf se';
+  if(S.tpl==='count')hook=(S.x.cdName||'Tyohaar')+' mein bas kuch din baaki';
+  if(S.tpl==='vs')hook='A ya B? Comment mein batayiye';
+  if(S.tpl==='guess')hook='Daam batao! Reel ke end tak jawab milega';
+  L.push(hook+' \u2728','');
+  if(['topn','guess','setb','vs'].indexOf(S.tpl)>=0&&items.length){items.slice(0,9).forEach(function(it,i){L.push((i+1)+'. '+(it.name||'Design')+' ('+it.karat+', '+it.weight+' g): '+D.inr(D.itemTotal(s,it).total))});L.push('');}
+  if(S.silverFor&&S.silverFor[S.tpl])L.push('Aaj ka silver rate: '+D.inr(S.silverRate)+' per kg');
+  L.push('Aaj ka rate (per 10 g): 24K '+D.inr(S.rate24)+' | 22K '+D.inr(S.rate22)+' | 20K '+D.inr(S.rate20));
+  L.push('Making flat '+(+S.making.toFixed(2))+'%* | Hallmark Card Available');
+  if(S.showCoin!==false)L.push('\uD83C\uDF81 Har khareed par Silver Coin FREE*'+(S.coinDetail?' ('+S.coinDetail+')':''));
+  if(S.showPolicy!==false){L.push('Payment: '+S.policy1+' | '+S.policy2);if(S.policyNote)L.push('Bade bill par bank transfer/UPI/cheque; \u20B92 lakh se upar PAN zaroori.');}
+  if(S.disclaimer)L.push(S.disclaimer);
+  L.push('','Design pasand aaya? DM ya WhatsApp karein'+(S.phone?': '+S.phone:'')+(S.owner?' ('+(S.ownerLabel||'Owner')+': '+S.owner+')':'')+'.');
+  if(S.location)L.push('\uD83D\uDCCD '+S.location);
+  var town=(S.town||'').replace(/[^A-Za-z0-9]/g,'').toLowerCase();
+  L.push('','Gold jewellery'+(S.town?' in '+S.town:'')+', hallmark gold chains, earrings, bridal sets.');
+  var tags=['#goldjewellery','#hallmarkgold','#indianjewellery','#goldrate'];if(town)tags.push('#'+town+'jewellers');else tags.push('#weddingjewellery');
+  L.push(tags.join(' '));
+  $('caption').value=L.join('\n');
+  var h=$('hooks');h.innerHTML='';(HOOKS[S.tpl]||[]).forEach(function(x){var li=document.createElement('li');li.textContent=x;h.appendChild(li);});
+  lenInfo();
+}
+function copyCaption(){var ta=$('caption');ta.focus();ta.select();try{ta.setSelectionRange(0,999999);}catch(e){}var ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ta.value).then(function(){status('Caption copied.')},function(){document.execCommand('copy');status('Caption copied.')});return;}ok=document.execCommand('copy');}catch(e){}status(ok?'Caption copied.':'Select the caption text and copy it manually.',!ok);}
+function lenInfo(){var tp=tplObj(),d=D.dur(tp,state());var n=$('lenInfo');n.textContent='Reel length: '+d.toFixed(0)+' seconds'+(d>35?'. That is long: Instagram viewers tend to drop off after about 30 seconds. Try fewer items or split into Part 1 and Part 2.':(d<=30?'. Good length for Instagram.':'. Acceptable, but shorter often keeps more viewers.'));}
+// playback
+var playing=true,t0=performance.now(),recording=false,recStart=0,recorder=null,recD=0;
+function restart(){t0=performance.now();if(vid){try{vid.currentTime=0;vid.play();}catch(e){}}}
+function restartIfCollection(id){if(['collTitle','budget','per','per2'].indexOf(id)>=0){caption();}}
+function manageVideos(ai){S.sitems.concat(S.items).forEach(function(it,i){if(it.media&&it.media.isVideo){var v=it.media.el;if(i===ai){if(!it._pl){try{v.currentTime=0;}catch(e){}v.play().catch(function(){});it._pl=true;}}else if(it._pl){v.pause();it._pl=false;}}});}
+function pngTime(tp,s){var s0={};for(var k in s)s0[k]=s[k];s0.introFor={};s0.silverFor={};s=s0;if(D.cleanOn(tp,s))return Math.max(1,(D.dur(tp,s)-(s.closeOn!==false?3.4:0))*.5);var d=D.dur(tp,s);if(tp.png)return tp.png(s);if(tp.id==='topn')return D.topNTimes({items:s.items,per:s.per}).tfin+1.0;if(tp.id==='vs')return 5.0;if(tp.id==='guess')return 1.6+3.6;return d;}
+var lastDraw=0;
+function frame(now){
+  if(!recording&&now-lastDraw<30){requestAnimationFrame(frame);return;}lastDraw=now;
+  var tp=tplObj(),s=state(),d=D.dur(tp,s),t;
+  if(recording){t=(now-recStart)/1000;if(t>recD+.8){stopRec();t=recD;}}
+  else if(playing){t=((now-t0)/1000)%(d+1.6);}else t=pngTime(tp,s)+D.introLen(tp,s);
+  var tt=Math.min(t,d);D.drawFrame(g,s,tp.id,tt);
+  if(vid){var I0=D.introLen(tp,s);if(I0>0&&tt<I0){if(!vid.paused)vid.pause();if(vid.currentTime>.05){try{vid.currentTime=0;}catch(e){}}}else if(I0>0&&vid.paused){vid.play().catch(function(){});}}manageVideos(s._active==null?-1:s._active);
+  requestAnimationFrame(frame);
+}
+function pickMime(){var c=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];for(var i=0;i<c.length;i++){try{if(window.MediaRecorder&&MediaRecorder.isTypeSupported(c[i]))return c[i];}catch(e){}}return '';}
+var dl=null,dlTried=false;
+function getDl(){if(dlTried)return Promise.resolve(dl);dlTried=true;try{if(window.claude&&window.claude.use)return window.claude.use('downloads').then(function(x){dl=x;return dl;},function(){return null;});}catch(e){}return Promise.resolve(null);}
+function saveFile(name,blob){return getDl().then(function(d){
+  if(d){return d.save({filename:name,data:blob}).then(function(){status('Saved: '+name);},function(e){status(e&&e.code==='declined'?'Save cancelled.':'Could not save: '+((e&&e.message)||e),true);});}
+  if(IS_IOS&&navigator.canShare&&navigator.share){var file=null;try{file=new File([blob],name,{type:blob.type});}catch(e){}
+    if(file&&navigator.canShare({files:[file]})){var sb=$('shareBox');sb.hidden=false;sb.innerHTML='';var bt=document.createElement('button');bt.type='button';bt.className='btn';bt.textContent='Tap to save to Photos or Files';sb.appendChild(bt);var nm=document.createElement('p');nm.className='small';nm.textContent=name+'  (choose "Save Image" or "Save Video")';sb.appendChild(nm);
+      bt.addEventListener('click',function(){navigator.share({files:[file]}).then(function(){status('Shared: '+name);},function(){});});status('Ready. Tap the button below to save to your iPhone.');return;}}
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();status('Saved: '+name+(IS_IOS?' (open the Files app, then Downloads).':' (check your Downloads).'));});}
+function guard(){if(stale()){status('Confirm today\u2019s rates first.',true);return false;}var p=problems();if(p.length){status('Fix the budget issue first: '+p.join(', '),true);return false;}return true;}
+function savePng(){if(!guard())return;var tp=tplObj(),s=state();s.introFor={};s.silverFor={};D.drawFrame(g,s,tp.id,pngTime(tp,s));cv.toBlob(function(b){if(!b){status('Could not make the image.',true);return;}saveFile('tps-'+tp.id+'-'+today()+'.png',b);},'image/png');}
+function startRec(){
+  if(!guard())return;var mime=pickMime();
+  if(!cv.captureStream||!window.MediaRecorder||!mime){status(IS_IOS?'Video recording needs iOS 14.5 or newer in Safari. If it is not available, play the preview, swipe down from the top-right corner and tap Screen Recording, or tap Save image.':'This browser cannot record video. Play the preview and use your phone\u2019s screen recorder instead, or use "Save image".',true);return;}
+  var chunks=[];try{recorder=new MediaRecorder(cv.captureStream(30),{mimeType:mime,videoBitsPerSecond:8000000});}catch(e){status('Recording not available: '+e.message,true);return;}
+  recorder.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+  recorder.onstop=function(){var type=mime.split(';')[0],ext=type==='video/mp4'?'mp4':'webm';var b=new Blob(chunks,{type:type});$('rec').disabled=stale();$('rec').textContent='Record reel video';
+    if(ext==='webm')status('Made a WebM file (this browser cannot make MP4). If Instagram rejects it, convert it in CapCut/VN or screen-record the preview.');
+    saveFile('tps-'+tplObj().id+'-'+today()+'.'+ext,b);};
+  var tp=tplObj();recD=D.dur(tp,state());if(vid){try{vid.currentTime=0;vid.play();}catch(e){}}
+  S.items.forEach(function(it){it._pl=false});S.sitems.forEach(function(it){it._pl=false});
+  recording=true;recStart=performance.now();recorder.start();$('rec').disabled=true;$('rec').textContent='Recording... ('+Math.round(recD)+' s)';status('Recording. Keep this tab open until it finishes.');
+}
+function stopRec(){recording=false;try{recorder.stop();}catch(e){}}
+function placePreview(){var as=$('pvAside'),main=document.querySelector('main.wrap');if(!as||!main)return;var phone=window.matchMedia&&window.matchMedia('(max-width:899px)').matches;if(phone){if(as.parentNode!==document.body)document.body.insertBefore(as,main);}else if(as.parentNode!==main)main.appendChild(as);}
+function boot(){bind();$('textOn').addEventListener('change',function(){applyNeeds();restart();lenInfo();});$('closeOn').addEventListener('change',function(){restart();lenInfo();});$('cleanLen').addEventListener('input',function(){lenInfo();});$('txtToggle').addEventListener('click',function(){S.textOn=(S.textOn===false);$('textOn').checked=(S.textOn!==false);persist();applyNeeds();restart();lenInfo();});placePreview();window.addEventListener('resize',placePreview);window.addEventListener('orientationchange',placePreview);$('pvToggle').addEventListener('click',function(){document.body.classList.toggle('pvHide');this.textContent=document.body.classList.contains('pvHide')?'Show preview':'Hide preview';});requestAnimationFrame(frame);}
+var fl=['400 20px Poppins','500 20px Poppins','600 20px Poppins','700 20px Poppins','700 20px "Cormorant Garamond"','600 20px "Cormorant Garamond"','italic 600 20px "Cormorant Garamond"'];
+if(document.fonts&&document.fonts.load){Promise.all(fl.map(function(f){return document.fonts.load(f)})).then(boot,boot);}else boot();
+})();
+
+</script>
+</body></html>
